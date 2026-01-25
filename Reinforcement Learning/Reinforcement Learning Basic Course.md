@@ -1479,11 +1479,7 @@ In other words, a policy is optimal starting from state s if and only if : for e
   
 
 > **Your policy is optimal if and only if it keeps being optimal everywhere you go**
-
->
-
   
-
 We are going to use this to build **value iteration algorithm:** we can think of this as like a backward induction algorithm , the value function is caching our solutions to all of our subproblems.
 
   
@@ -3164,59 +3160,27 @@ Where $G_t = R_{t+1} + \gamma V(S_{t+1})$
 
 We get our final update rule:
 
-  
-
 $$
 
 V(S_t) \leftarrow V(S_t) + \alpha \left( \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} (R_{t+1} + \gamma V(S_{t+1})) - V(S_t) \right)
 
 $$
 
-  
-
 It has much lower variance than MC importance sampling because policies need to be aligned/similar only over a single step.
-
-  
-
 ### Q-Learning
-
-  
-
 We now consider off-policy learning of action-values $Q(s,a)$ and no importance sampling is required.
-
-  
-
 We are going to select our next action using our behaviour policy $\mu$ but we are going to consider also some alternative successor action that we might have taken following our target policy $\pi$.
 
-  
-
 How it works:
-
-  
-
 - Take action from behavior policy $A_t \sim \mu(\cdot |S_t)$ → we follow an exploratory policy
-
 - Consider an alternative action $A' \sim \mu(\cdot | S_t)$ instead of using the action you actually took → we imagine what the target policy would do
-
 - Update $Q(S_t, A_t)$ towards that alternative action→ we bootstrap from the alternative action’s value.
-
-  
-
 $$
-
 Q(S_t, A_t) \leftarrow Q(S_t,A_t) + \alpha \left( R_{t+1} + \gamma Q(S_{t+1}, A') - Q(S_t, A_t) \right)
-
 $$
-
-  
 
 The importance weight is built into the action selection and there is no nedd for importance sampling corrections ( no need for an explicit weight and for this reason we are avoiding the variance problem ).
-
-  
-
 The weighting is not needed because we are not directly computing an expectation under $\pi$ but we are using the **max operator**
-
-  
 
 $$
 
@@ -3224,11 +3188,7 @@ $$
 
 $$
 
-  
-
 The target policy $\pi$ is **greedy** w.r.t. $Q(s,a)$ and the behaviour policy is acting $\epsilon-$greedy ( exploitation and exploration ) :both of them are improving!
-
-  
 
 Key insight: The max is not a sample from any policy!
 
@@ -3306,3 +3266,266 @@ The environment naturally samples according to $P(s'|s,a)$ because we will sampl
 
 This table shows that **every DP algorithm has a TD counterpart**. You don't need to memorize separate algorithms—understand the Bellman equations and whether you're doing full backups or sampling.
 
+# Value Function Approximation
+
+  
+
+RL can be used to solve large problems ( with a lot of number of states ) like:
+
+  
+
+- Backgammon: $10^{20}$
+
+- Computer Go: $10^{170}$ states
+
+- Helicopter: continuous state space
+
+  
+
+When we work with continuous state space, we can not build a table where we have a separate value for each state because it is not going to scale up. We need model-free methods that scale up for prediction and control: we need a value function approximation.
+
+  
+
+So far we have represented the value function as a **lookup table** where every state s has an entry $V(s)$ or every state s and action s pair has $Q(s,a)$. For problem with large MDPs , there are too many states/actions to store and it is too slow to learn the value of each of them individually. We **estimate** our value function with **parametric function approximation:**
+
+  
+
+$$
+
+\hat{v}(s,\textbf{w} ) \approx v_\pi(s) \\
+
+\hat{q}(s,a,\textbf{w}) \approx q_\pi(s,a)
+
+$$
+
+  
+
+$\textbf{w}$ is a vector of weights ( e.g. parameters of NN ).
+
+  
+
+We want to build a function approximation that fits $v_\pi(s)$ or $q_\pi(s,a)$ across the whole state space ( and action space ) using a compact representation through a smaller number of weights than the states ( and actions ) in the whole state space ( and action space ).
+
+  
+
+Using a small number of weights w.r.t the total number of states allows us to decrease the memory required but also to generalize from seen states to unseen ones by querying the function approximation.
+
+  
+
+We will do that by updating these weights/parameters using the methods seen so far ( MC or TD learning ).
+
+  
+
+There are three different types/architectures of function approximations :
+
+  
+
+1. State-value function approximation
+
+![image.png](images2/03b5fb3b-0da9-4664-a768-0bcdb26ac03f.png)
+
+2. Action-value function approximation → we have got two choices
+
+3. Action in Action-value function approximation → i am in the state s and i am considering the action a, how good would that be? The function approximator will give us the estimator by using the weights
+
+![image.png](images2/43a0a94a-4dee-41f5-960d-c1e2c0909a0f.png)
+
+2. Action out Action-value function approximation → we want in state s and we want our function approximator to tell us the value of all actions that i might take.
+
+![image.png](images2/image.png)
+
+  
+
+We can use anything we like as black box function approximator, any tool:
+
+  
+
+- Linear combinations of feature
+
+- Neural Network
+
+- Decision Tree
+
+- Nearest Neighbour
+
+- Fourier bases
+
+- ecc…
+
+  
+
+BUT we must consider **differentiable** function approximators ( first two of this list ) and a training method that is suitable for non-stationary and non-iid data.
+
+  
+
+## Incremental methods
+
+  
+
+### Gradient Descent
+
+  
+
+Considering a differentiable function $J(\textbf{w})$ of parameter vector **w** , we can define its gradient as:
+
+  
+
+![image.png](images2/image%201.png)
+
+  
+
+![image.png](images2/image%202.png)
+
+  
+
+It gives us the direction of the steepest descent/ascent and we are going to follow this downhill in order to find a local minimum of $J(\textbf{w})$.
+
+  
+
+We adjust our parameters $\textbf{w}$ in the direction of the gradient ( downhill due the minus)
+
+  
+
+$$
+
+\Delta \textbf{w} = - \frac{1}{2} \alpha \nabla_{\textbf{w}}J(\textbf{w})
+
+$$
+
+  
+
+where $\alpha$ is a step-size parameter.
+
+  
+
+We want to use it in value function approximation, in this case we are assuming we are doing supervising learning: someone ( an oracle ) is giving use the true $v_\pi(s)$ .
+
+  
+
+We want to find a parameter vector $\textbf{w}$ minimize the Mean Squared Error ( MSE ) of the difference of the approximate value function $\hat{v}(s,\textbf{w})$ and true value function $v_\pi(s)$
+
+  
+
+$$
+
+J(\textbf{w}) = E_\pi[(v_\pi(S) - \hat{v}(S,\textbf{w})^2]
+
+$$
+
+  
+
+We use the gradient descent to find a local minimum ( we plug in the approximation function chosen )
+
+  
+
+![image.png](images2/image%203.png)
+
+  
+
+We apply the chain rule and we know that our oracle does not depend on $\textbf{w}$.
+
+  
+
+Instead of explicitly computing this expectation , we are going to randomly sample a state ( by just seeing which state we visited ) which is called **Stochastic Gradient Descent** ( which samples the gradient )
+
+  
+
+$$
+
+\Delta \textbf{w} = \alpha( v_\pi(S) - \hat{v}(S,\textbf{w})) \nabla_\textbf{w} \hat{v}(S,\textbf{w})
+
+$$
+
+  
+
+Even if we change things online ( updates step after step ) then we still arrive at minimizing what we want.
+
+  
+
+Stochastic gradient descent (SGD) does **not** guarantee convergence to the global optimum in non-convex problems. It typically converges to a local optimum or saddle point.
+
+  
+
+### Linear Function Approximation
+
+  
+
+We want represent a state by a **feature vector**
+
+  
+
+![image.png](images2/image%204.png)
+
+  
+
+Each of these features is a property ( a number ) which tells you some piece of information about our state→ Each feature is a representation that characterizes the state space.
+
+  
+
+Examples:
+
+  
+
+- Distance of robot from landmarks
+
+- Trends in the stock market
+
+  
+
+Supposing someone gave us our feature vector ( how to find me will not be covered in this course ) , we can approximate the value function by a linear combination of features
+
+  
+
+$$
+
+⁍
+
+$$
+
+  
+
+Its objective function is the MSE which is quadratic in parameters $\textbf{w}$
+
+  
+
+$$
+
+J(\textbf{w}) = E_\textbf{w}[(v_\pi(s) - x(S)^T\textbf{w})^2]
+
+$$
+
+  
+
+Stochastic gradient descent converges to the global optimum due to the quadratic and convex nature of the function.
+
+  
+
+The update rule is particularly simple:
+
+  
+
+![image.png](images2/image%205.png)
+
+  
+
+**Table Lookup** is a special case of linear value function approximation where we use table lookup features:
+
+  
+
+![image.png](images2/bfdd86b4-8614-47fe-9361-e103359327d5.png)
+
+  
+
+That says if i am in state one i have a feature value of one otherwise i will have 0 and all way down until the final state: all of them are 0 except for the one related to state where i am now ( one hot encoding ).
+
+  
+
+If we use this approach, the approximation just consists of selecting one weight value.
+
+  
+
+![image.png](images2/bc58cc50-42b9-4083-b537-62835205fdf6.png)
+
+  
+
+### Incremental Prediction Algorithm
