@@ -4,11 +4,47 @@
     "type": "split",
     "children": [
       {
-        "id": "e1c90d19780ce0b1",
+        "id": "39f8c6b7e8c418a1",
         "type": "tabs",
+        "dimension": 44.17910447761194,
         "children": [
           {
-            "id": "411f2f9d3d9d7c78",
+            "id": "7b9fa535c852d8e5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Reinforcement Learning/Reinforcement Learning Basic Course.md",
+                "mode": "source",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "Reinforcement Learning Basic Course"
+            }
+          }
+        ]
+      },
+      {
+        "id": "433a9d5094f44c2b",
+        "type": "tabs",
+        "dimension": 55.82089552238806,
+        "children": [
+          {
+            "id": "9ca5b1efb2184c53",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Templates/TOC.md",
+                "mode": "source",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "TOC"
+            }
+          },
+          {
+            "id": "83d69e8c85a7317d",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -21,7 +57,8 @@
               "title": "Reinforcement Learning Basic Course"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -166,7 +203,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -180,28 +218,28 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "411f2f9d3d9d7c78",
+  "active": "7b9fa535c852d8e5",
   "lastOpenFiles": [
-    "Reinforcement Learning/images2/image 4.png",
-    "Reinforcement Learning/images2/image 3.png",
-    "Reinforcement Learning/images2/image 2.png",
-    "Reinforcement Learning/images2/image 1.png",
-    "Reinforcement Learning/images2/bfdd86b4-8614-47fe-9361-e103359327d5.png",
-    "Reinforcement Learning/images2/bc58cc50-42b9-4083-b537-62835205fdf6.png",
-    "Reinforcement Learning/images2/43a0a94a-4dee-41f5-960d-c1e2c0909a0f.png",
-    "Reinforcement Learning/images2/03b5fb3b-0da9-4664-a768-0bcdb26ac03f.png",
-    "Reinforcement Learning/images2/image 5.png",
-    "Reinforcement Learning/images2/image.png",
-    "Reinforcement Learning/images/6f9b9e95-6ad2-4bb8-bc74-d2813282dd04.png",
-    "Reinforcement Learning/images2",
+    "Pasted image 20260127164649.png",
+    "Pasted image 20260127163517.png",
+    "Screenshot 2026-01-27 alle 16.30.23.png",
+    "Pasted image 20260127162539.png",
+    "Pasted image 20260127161756.png",
+    "Pasted image 20260127161004.png",
+    "Pasted image 20260127160951.png",
+    "Screenshot 2026-01-27 alle 15.52.13.png",
+    "Screenshot 2026-01-27 alle 15.51.46.png",
+    "Screenshot 2026-01-27 alle 15.50.18.png",
+    "Pasted image 20260127145312.png",
+    "2026-01-25.md",
     "Reinforcement Learning/Reinforcement Learning Basic Course.md",
     "Templates/TOC.md",
+    "Untitled.canvas",
+    "Reinforcement Learning/images2",
     "README.md",
     "TOC Example.md",
-    "2026-01-25.md",
     "Untitled.md",
     "Templates",
-    "Untitled.canvas",
     "Reinforcement Learning/images",
     "Reinforcement Learning/🤖 1 Reinforcement Learning - Basic Course",
     "Reinforcement Learning"

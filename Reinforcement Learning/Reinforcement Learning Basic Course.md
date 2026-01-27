@@ -1,33 +1,68 @@
 >[!SUMMARY] Table of Contents
->- [[Reinforcement Learning Basic Course#Introduction of RL|Introduction of RL]]
->    - [[Reinforcement Learning Basic Course#Inside an RL agent|Inside an RL agent]]
->    - [[Reinforcement Learning Basic Course#Maze Example|Maze Example]]
->- [[Reinforcement Learning Basic Course#Markov Decision Process|Markov Decision Process]]
->    - [[Reinforcement Learning Basic Course#Markov Property|Markov Property]]
->    - [[Reinforcement Learning Basic Course#Markov Process|Markov Process]]
->    - [[Reinforcement Learning Basic Course#Markov Reward Process MRP|Markov Reward Process MRP]]
->    - [[Reinforcement Learning Basic Course#Value Function|Value Function]]
->    - [[Reinforcement Learning Basic Course#Bellman Equation for MRPs|Bellman Equation for MRPs]]
->    - [[Reinforcement Learning Basic Course#Markov Decision Process MDP|Markov Decision Process MDP]]
->- [[Reinforcement Learning Basic Course#Planning by Dynamic Programming|Planning by Dynamic Programming]]
->    - [[Reinforcement Learning Basic Course#Policy Evaluation|Policy Evaluation]]
->    - [[Reinforcement Learning Basic Course#Policy Iteration|Policy Iteration]]
->    - [[Reinforcement Learning Basic Course#Value Iteration Algorithm|Value Iteration Algorithm]]
->    - [[Reinforcement Learning Basic Course#Extensions to DP|Extensions to DP]]
->- [[Reinforcement Learning Basic Course#Model-free Prediction|Model-free Prediction]]
->    - [[Reinforcement Learning Basic Course#Monte-Carlo Learning|Monte-Carlo Learning]]
->    - [[Reinforcement Learning Basic Course#Temporal-Difference Learning|Temporal-Difference Learning]]
->    - [[Reinforcement Learning Basic Course#Batch MD and TD|Batch MD and TD]]
->    - [[Reinforcement Learning Basic Course#MC vs TD|MC vs TD]]
->    - [[Reinforcement Learning Basic Course#MC vs TD vs DP backups|MC vs TD vs DP backups]]
->    - [[Reinforcement Learning Basic Course#Bootstrapping and Sampling|Bootstrapping and Sampling]]
->    - [[Reinforcement Learning Basic Course#TD($\lambda$)|TD($\lambda$)]]
->    - [[Reinforcement Learning Basic Course#TD(0) and TD($\lambda$)|TD(0) and TD($\lambda$)]]
->    - [[Reinforcement Learning Basic Course#Summary of Forward and Backward TD($\lambda$ )|Summary of Forward and Backward TD($\lambda$ )]]
->- [[Reinforcement Learning Basic Course#Model Free Control|Model Free Control]]
->    - [[Reinforcement Learning Basic Course#On-Policy Monte-Carlo Control|On-Policy Monte-Carlo Control]]
->    - [[Reinforcement Learning Basic Course#On-Policy Temporal Difference Learning|On-Policy Temporal Difference Learning]]
->    - [[Reinforcement Learning Basic Course#Off-Policy Learning|Off-Policy Learning]]
+- [[Reinforcement Learning Basic Course#Introduction of RL|Introduction of RL]]
+    - [[Reinforcement Learning Basic Course#Inside an RL agent|Inside an RL agent]]
+    - [[Reinforcement Learning Basic Course#Maze Example|Maze Example]]
+- [[Reinforcement Learning Basic Course#Markov Decision Process|Markov Decision Process]]
+    - [[Reinforcement Learning Basic Course#Markov Property|Markov Property]]
+    - [[Reinforcement Learning Basic Course#Markov Process|Markov Process]]
+    - [[Reinforcement Learning Basic Course#Markov Reward Process MRP|Markov Reward Process MRP]]
+    - [[Reinforcement Learning Basic Course#Value Function|Value Function]]
+    - [[Reinforcement Learning Basic Course#Bellman Equation for MRPs|Bellman Equation for MRPs]]
+    - [[Reinforcement Learning Basic Course#Markov Decision Process MDP|Markov Decision Process MDP]]
+        - [[Reinforcement Learning Basic Course#Stochastic Policy|Stochastic Policy]]
+        - [[Reinforcement Learning Basic Course#Value function|Value function]]
+        - [[Reinforcement Learning Basic Course#Bellman Expectation Equation|Bellman Expectation Equation]]
+        - [[Reinforcement Learning Basic Course#Optimal Value Function|Optimal Value Function]]
+        - [[Reinforcement Learning Basic Course#Optimal Policy|Optimal Policy]]
+        - [[Reinforcement Learning Basic Course#Bellman Optimality Equation|Bellman Optimality Equation]]
+        - [[Reinforcement Learning Basic Course#Solving the Bellman Optimality Equation|Solving the Bellman Optimality Equation]]
+- [[Reinforcement Learning Basic Course#Planning by Dynamic Programming|Planning by Dynamic Programming]]
+    - [[Reinforcement Learning Basic Course#Policy Evaluation|Policy Evaluation]]
+    - [[Reinforcement Learning Basic Course#Policy Iteration|Policy Iteration]]
+        - [[Reinforcement Learning Basic Course#Modified Policy Iteration|Modified Policy Iteration]]
+    - [[Reinforcement Learning Basic Course#Value Iteration Algorithm|Value Iteration Algorithm]]
+        - [[Reinforcement Learning Basic Course#Summary of Synchronous Dynamic Programming Algorithm|Summary of Synchronous Dynamic Programming Algorithm]]
+    - [[Reinforcement Learning Basic Course#Extensions to DP|Extensions to DP]]
+        - [[Reinforcement Learning Basic Course#Asynchronous DP|Asynchronous DP]]
+        - [[Reinforcement Learning Basic Course#Full-Width and Sample Backups|Full-Width and Sample Backups]]
+- [[Reinforcement Learning Basic Course#Model-free Prediction|Model-free Prediction]]
+    - [[Reinforcement Learning Basic Course#Monte-Carlo Learning|Monte-Carlo Learning]]
+        - [[Reinforcement Learning Basic Course#First-Visit Monte-Carlo Policy Evaluation|First-Visit Monte-Carlo Policy Evaluation]]
+        - [[Reinforcement Learning Basic Course#Every-Visit Monte-Carlo Policy Evaluation|Every-Visit Monte-Carlo Policy Evaluation]]
+    - [[Reinforcement Learning Basic Course#Temporal-Difference Learning|Temporal-Difference Learning]]
+    - [[Reinforcement Learning Basic Course#Batch MD and TD|Batch MD and TD]]
+    - [[Reinforcement Learning Basic Course#MC vs TD|MC vs TD]]
+    - [[Reinforcement Learning Basic Course#MC vs TD vs DP backups|MC vs TD vs DP backups]]
+    - [[Reinforcement Learning Basic Course#Bootstrapping and Sampling|Bootstrapping and Sampling]]
+    - [[Reinforcement Learning Basic Course#TD($\lambda$)|TD($\lambda$)]]
+        - [[Reinforcement Learning Basic Course#$\lambda-$Return|$\lambda-$Return]]
+        - [[Reinforcement Learning Basic Course#Forward-view TD($\lambda$)|Forward-view TD($\lambda$)]]
+        - [[Reinforcement Learning Basic Course#Backward-view TD($\lambda$)|Backward-view TD($\lambda$)]]
+    - [[Reinforcement Learning Basic Course#TD(0) and TD($\lambda$)|TD(0) and TD($\lambda$)]]
+    - [[Reinforcement Learning Basic Course#Summary of Forward and Backward TD($\lambda$ )|Summary of Forward and Backward TD($\lambda$ )]]
+- [[Reinforcement Learning Basic Course#Model Free Control|Model Free Control]]
+    - [[Reinforcement Learning Basic Course#On-Policy Monte-Carlo Control|On-Policy Monte-Carlo Control]]
+        - [[Reinforcement Learning Basic Course#Generalised Policy Iteration GPI|Generalised Policy Iteration GPI]]
+        - [[Reinforcement Learning Basic Course#Generalised Policy Iteration with MC Evaluation|Generalised Policy Iteration with MC Evaluation]]
+        - [[Reinforcement Learning Basic Course#GLIE Monte-Carlo Control|GLIE Monte-Carlo Control]]
+    - [[Reinforcement Learning Basic Course#On-Policy Temporal Difference Learning|On-Policy Temporal Difference Learning]]
+        - [[Reinforcement Learning Basic Course#Updating Action-Value Functions with Sarsa|Updating Action-Value Functions with Sarsa]]
+        - [[Reinforcement Learning Basic Course#n-Step Sarsa|n-Step Sarsa]]
+    - [[Reinforcement Learning Basic Course#Off-Policy Learning|Off-Policy Learning]]
+        - [[Reinforcement Learning Basic Course#Importance Sampling|Importance Sampling]]
+        - [[Reinforcement Learning Basic Course#Q-Learning|Q-Learning]]
+        - [[Reinforcement Learning Basic Course#Relationship between DP and TD|Relationship between DP and TD]]
+- [[Reinforcement Learning Basic Course#Value Function Approximation|Value Function Approximation]]
+    - [[Reinforcement Learning Basic Course#Incremental methods|Incremental methods]]
+        - [[Reinforcement Learning Basic Course#Gradient Descent|Gradient Descent]]
+        - [[Reinforcement Learning Basic Course#Linear Function Approximation|Linear Function Approximation]]
+        - [[Reinforcement Learning Basic Course#Incremental Prediction Algorithm|Incremental Prediction Algorithm]]
+            - [[Reinforcement Learning Basic Course#Monte Carlo with Value Function Approximation|Monte Carlo with Value Function Approximation]]
+            - [[Reinforcement Learning Basic Course#TD  Learning with Value Function Approximation|TD  Learning with Value Function Approximation]]
+            - [[Reinforcement Learning Basic Course#TD($\lambda$)  Learning with Value Function Approximation|TD($\lambda$)  Learning with Value Function Approximation]]
+        - [[Reinforcement Learning Basic Course#Incremental Control Algorithm|Incremental Control Algorithm]]
+                - [[Reinforcement Learning Basic Course#Action-Value Function Approximation|Action-Value Function Approximation]]
+            - [[Reinforcement Learning Basic Course#Linear Action-Value Function Approximation|Linear Action-Value Function Approximation]]
 # Introduction of RL
 
 Reinforcement learning is studying the science of decision making which makes it very general.
@@ -3529,3 +3564,448 @@ If we use this approach, the approximation just consists of selecting one weight
   
 
 ### Incremental Prediction Algorithm
+In the previous techniques we have assumed we knew the true value function $v_\pi(s)$  but in RL there is no supervisor, only rewards.
+In practise we replace $v_\pi(s)$ with a *target*:
+- For MC , the target is the return $G_t$
+$$
+\Delta w = \alpha(G_t - \hat{v}(S_{t+1},\textbf{w} )) \nabla_\textbf{w}\hat{v}(S_{t+1})
+$$
+- For TD(0), the target is the TD target $R_{t+1} + \gamma \hat{v}(S_{t+1},\textbf{w})$
+$$
+\Delta w = \alpha(R_{t+1} + \gamma \hat{v}(S_{t+1},\textbf{w}) - \hat{v}(S_{t+1},\textbf{w} )) \nabla_\textbf{w}\hat{v}(S_{t+1})
+$$
+- For TD($\lambda$), the target is $\lambda-$return $G_t^\lambda$
+$$
+\Delta w = \alpha(G_t^\lambda - \hat{v}(S_{t+1},\textbf{w} )) \nabla_\textbf{w}\hat{v}(S_{t+1})
+$$
+We are doing supervisor learning on the returns.
+
+#### Monte Carlo with Value Function Approximation
+We are going to use the return $G_t$ which is an unbiased , noisy sample of the true value $v_\pi(S_t)$.
+We want to apply supervised learning to training data:
+![[Pasted image 20260125163659.png]]
+We see the state $S_1$  and we run a trajectory from it and we see that we got a return of $G_1$ , all the way up to our final state $S_T$ and its final return $G_T$.
+We are treating it as dataset and we are adjusting our function approximator to fit the $G$s, the simplest case is using *linear Monte-Carlo policy evaluation*
+![[Pasted image 20260125164219.png]]
+Monte-Carlo evaluation converges to a local optimum even when using non-linear value function approximation.
+
+#### TD  Learning with Value Function Approximation
+We are going to use the TD target $R_{t+1} + \gamma \hat{v}(S_{t+1},\textbf{w})$ which is an unbiased , noisy sample of the true value $v_\pi(S_t)$.
+We want to apply supervised learning to training data as before:
+![[Pasted image 20260125165103.png]]
+ The simplest case is using *TD(0)*:
+ ![[Pasted image 20260125165245.png]]
+ It converges close to global optimum.
+#### TD($\lambda$)  Learning with Value Function Approximation
+We are going to use the $\lambda-$return $G_t^\lambda$  which is a biased example of the true value $v_\pi(S_t)$.
+We want to apply supervised learning to training data as before:
+![[Pasted image 20260125165712.png]]
+We can approximate the value function either using:
+- Forward view linear TD($\lambda$)
+![[Pasted image 20260125165926.png]]
+- Backward view linear TD($\lambda$)
+![[Pasted image 20260125165940.png]]
+
+
+### Incremental Control Algorithm
+![[Pasted image 20260125171213.png]]
+We are going to use approximate policy evaluation: we start off with some parameter vector now which defines some value function ( could be a neural network weights or some other tools ). We act greedily with a little bit of epsilon exploration ( *$\epsilon-$greedy policy improvement*) w.r.t. our value function that we have defined ( w.r.t. $\hat{q}(\cdot, \cdot, \textbf{w})$). After that we will obtain a new policy and we want to evaluate it ( we compare the prediction versus the reality by taking samples from the environment and we update the parameters of our neural network , the weights, in the direction that reduces this error )that gives us a new value function and so far ( it is a loop that ends when $q_\textbf{w} = q_\star$)
+![[Screenshot 2026-01-25 alle 17.19.09.png]]
+
+#### Action-Value Function Approximation
+We will do the same steps again using Q instead of V.
+We are going to approximate the action-value function
+$$
+\hat{q}(S,A,\textbf{w}) \approx q_\pi(S,A)
+$$
+We want to minimise the MSE between approximation action value $\hat{q}(S,A,\textbf{w})$ and the true action value functions $q_\pi(S,A)$
+$$
+J(\textbf{w}) = E_\pi\left[(q_\pi(S,A) - \hat{q}(S,A,\textbf{w}))^2\right]
+$$
+We apply the stochastic gradient descent to find a local minimum
+$$
+- \frac{1}{2}\nabla_\textbf{w}J(\textbf{w}) = (q_\pi(S,A) - \hat{q}(S,A,\textbf{w})) \nabla_\textbf{w} \hat{q}(S,A,\textbf{w})
+$$
+$$
+\Delta \textbf{w} = \alpha(q_\pi(S,A) - \hat{q}(S,A,\textbf{w})) \nabla_\textbf{w} \hat{q}(S,A,\textbf{w}) 
+$$
+
+#### Linear Action-Value Function Approximation
+We represent a state and an action by a **feature vector**:
+![[Pasted image 20260126145636.png]]
+We can re-write the action-value function by linear combination of features:
+![[Pasted image 20260126145814.png]]
+The stochastic gradient update will be:
+![[Pasted image 20260126145833.png]]
+For incremental control algorithms we need to replace the target $q_\pi(S,A)$:
+- Using MC, the target becomes $G_t$
+$$
+\Delta \textbf{w} = \alpha \left( G_t - \hat{q}(S_t,A_t,\textbf{w})\nabla_\textbf{w}\hat{q}(S_t,A_t,\textbf{w}) \right)
+$$
+- Using TD(0), the target becomes the TD target $R_{t+1} + \gamma Q(S_{t+1}, A_{t+1})$
+$$
+\Delta \textbf{w} = \alpha \left(R_{t+1} + \gamma Q(S_{t+1}, A_{t+1})  - \hat{q}(S_t,A_t,\textbf{w})\nabla_\textbf{w}\hat{q}(S_t,A_t,\textbf{w}) \right)
+$$
+- Using forward-view TD($\lambda$), the target becomes the action-value $\lambda$ return
+$$
+\Delta \textbf{w} = \alpha \left(q_t^\lambda  - \hat{q}(S_t,A_t,\textbf{w})\nabla_\textbf{w}\hat{q}(S_t,A_t,\textbf{w}) \right)
+$$
+- Using backward-view TD($\lambda$), the update is
+$$
+\delta_t = R_{t+1} + \gamma \hat{q}(S_{t+1},A_{t+1},\textbf{w}) - \hat{q}(S_{t},A_{t}
+$$
+$$
+E_t = \gamma \lambda E_{t-1} + \nabla_\textbf{w}\hat{q}(S_t,A_t,\textbf{w})
+$$
+$$
+\Delta \textbf{w} = \alpha \delta_t E_t
+$$
+
+**Example**: Linear Sarsa with Corse Coding in Mountain Car
+![[Pasted image 20260126151347.png]]
+A car is stuck in a valley and needs to reach the goal at the top. The car is underpowered—it can't climb directly. It must build momentum by oscillating back and forth.
+The state space is the position of the car and its velocity ( both are continuous ).
+
+###  Convergence of prediction algorithms 
+Following Monte Carlo is just like a noisy Oracle , we are doing supervised learning so it must converge. Is that true for TD methods?
+No, TD is not guaranteed to be a stable algorithm : it can blow up.
+![[Pasted image 20260126153324.png]]
+This is a summary of convergence of prediction algorithms.
+TD methods are not the best choice for Off-policy learning.
+
+### Gradient Temporal-Difference Learning
+Bootstrapping can prevent the convergence of the algorithm. TD diverges when off-policy or using nonlinear function approximation because it does not follow the gradient of any objective function.
+**Gradient TD** follows true gradient of projected Bellman error
+![[Pasted image 20260126153823.png]]
+
+### Convergence of Control Algorithms
+There is no guarantee once you use function approximation that your improvement step is really improving the policy
+![[Pasted image 20260126153954.png]]
+
+# Batch Methods
+The batch in this case is the agent's experience ( considered as training data ).
+We have seen gradient descent but it does not sample efficiently while batch methods seek to find the best fitting value function over our batch.
+![[Screenshot 2026-01-26 alle 15.45.53.png]]
+
+## Least Square Prediction
+One definition of finding the best fit is finding a least square fit.
+$$
+\hat{v}(s,\textbf{w}) \approx v_\pi(s) 
+$$
+We consider a training data set as *experience* D composed of <state,value> pairs
+![[Pasted image 20260126155840.png]]
+We want to find the best parameters $\textbf{w}$ that give the best fitting value function $\hat{v}(s, \textbf{w})$
+Least squares algorithms find parameter vector  $\textbf{w}$ minimising sum-squared error between  $\hat{v}(s_t, \textbf{w})$ and target values $v_t^\pi$
+![[Pasted image 20260126160607.png]]
+We see that mathematically 
+$$ MSE = \frac{1}{n} \text{Least Squares}$$
+There is a very easy way to find the least square solution by using **Stochastic Gradient Descent with Experience Replay**: given an experience cached/stored
+![[Pasted image 20260126155840.png]]
+we repeat:
+1. Sample state and a value from our experience
+$$
+<s,v^\pi> \sim D
+$$
+2. Apply SGD update towards the sampled target
+$$
+\Delta \textbf{w}= \alpha(v^\pi- \hat{v}(s,\textbf{w})) \nabla_\textbf{w}\hat{v}(s,\textbf{w})
+$$
+It is like supervising learning.
+This algorithm converges to the least square solution
+$$
+\textbf{w}^\pi = \argmin_\textbf{w} LS(\textbf{w})
+$$
+### Experience Replay in Deep Q-Networks
+DQN uses **experience replay** and **fixed Q-targets**:
+- Take an action $a_t$ according to $\epsilon-$greedy policy w.r.t. our value function approximator
+- We store the transition $(s_t,a_t,r_{t+1},s_{t+1})$ in replay memory D
+- Sample random mini-batch of transitions $(s,a,r,s')$ from our replay memory D
+- Compute Q-learning targets w.r.t. old, fixed parameters $\textbf{w}^-$
+	- We freeze the targets in other to get more stability 
+- Optimise MSE between Q-network is predicting ( our action-value function ) and our Q-learning targets 
+![[Pasted image 20260127090848.png]]
+- We optimize it by using stochastic gradient descent
+
+This method is stable with neural networks due the experience replay approach ( it decorrelates the trajectories and we use two networks, one with the old parameters and one with the new parameters ).
+
+How much does DQN help?
+![[Pasted image 20260127091825.png]]
+
+### Linear Least Squares Prediction Algorithms
+It may take many iterations for experience replay to find a least squares solution. If we use a linear value function approximation $\hat{v}(s,\textbf{w}) = x(s)^T\textbf{w}$ we can find an LS solution directly ( a closed-form LS solution ).
+$$\textbf{w}^\pi = \argmin_\textbf{w} LS(\textbf{w})$$
+It means that when we are at the minimum of LS, the expected update over the samples is equal 0
+![[Pasted image 20260127093145.png]]
+We need to invert a matrix but it does not depend any more on the number of states but on the N number of features that we are considering.
+The **direct solution** is
+- $O(N^3)$
+- $O(N^2)$ using Shermann-Morrison
+
+But we don't know the true value $v^\pi_t$ , we need to use biased or noisy samples of it:
+- LSMC ( Least Square Monte Carlo) uses the return
+$$v^\pi_t \approx G_t$$
+- LSTD ( Least Square Temporal Difference) uses the TD return
+$$v^\pi_t \approx R_{t+1} + \gamma \hat{v}(S_{t+1} , \textbf{w})$$
+- LSTD($\lambda$) ( Least Square TD($\lambda$)) uses the $\lambda-$return
+$$v^\pi_t \approx G_t^\lambda$$
+![[Pasted image 20260127093724.png]]
+Convergence Of Linear LS prediction algorithms:
+![[Pasted image 20260127093807.png]]
+
+## Least Square Control
+
+### Least Squares Policy Iteration
+It is used for solving the control problem by using Least Square approach.
+The policy evaluation step is replaced with **least square Q-learning** while the policy improvement is always using a greedy policy improvement.
+![[Pasted image 20260127094344.png]]
+
+We want to approximate the action-value function $q_\pi(s,a)$ using linear combination of features $x(s,a)$
+$$
+\hat(q)(s,a,\textbf{w}) = x(s,a)^T \textbf{w} \approx q_\pi(s,a)
+$$
+We start from an experience which is again a dataset consisting of <(state,action), value> pairs
+![[Pasted image 20260127094643.png]]
+We want to minimise the least square error between the value function approximation $\hat{q}(s,a,\textbf{w})$ and true value $q_\pi(s,a)$ which is generated/sampled using policy $\pi$  from experience.
+
+**Least Square Control** combines batch methods with off-policy learning:
+- We want to use all the experience efficiently for policy evaluation
+- We want to improve the policy for the control problem  
+- But the experience comes from many different policies ( old data )
+	- Each step we improve the policy, the old data stay related to the previous policy
+	- For this reason we need to use off-policy learning ( learning from following a policy which is not the one that the agent is currently following )
+How it works?
+It uses the same approach of Q-learning but applied to batch data
+- Use experience generated by old policy
+$$S_t, A_t, R_{t+1}, S_{t+1} \sim \pi_{old}$$
+- We consider alternative successor action 
+$$A' = \pi_{new}(S_{t+1})$$
+- We update our action-value function approximation $\hat{q}(S_t,A_t,\textbf{w})$ towards value of alternative action $R_{t+1} + \gamma \hat{q}(S_{t+1},A',\textbf{w})$
+Update our estimate using the new policy's predicted value, not the old policy's.
+![[Screenshot 2026-01-27 alle 10.03.52.png]]
+
+### Least Square Q-learning
+We can consider the following linear Q-learning update:
+![[Pasted image 20260127100743.png]]
+We can solve it directly instead of doing many iterations of SGD: Least Squares Temporal Difference Q-Learning (LSTDQ)( batch method that solves analytically instead of using gradient descent )
+![[Pasted image 20260127100918.png]]
+
+![[Screenshot 2026-01-27 alle 10.09.24.png]]
+
+### Least Squares Policy Iteration Algorithm
+It uses the LSTDQ algorithm for policy evaluation by repeatedly re-evaluating experience D with different policies.
+![[Pasted image 20260127101127.png]]
+How it works?
+![[Screenshot 2026-01-27 alle 10.16.13.png]]
+This was a **practical algorithm before deep RL** for problems with moderate state/action spaces. Modern deep RL (DQN) uses experience replay + gradient descent instead, which scales to high-dimensional problems.
+
+Convergence of Control Algorithms:
+![[Pasted image 20260127101706.png]]
+
+# Policy Gradient
+Instead of working with value functions as we have seen so far, we are working with the policy, how can i see some experience and from that figure out how to change my policy in a direction that makes it better.
+We are improving the policy directly.
+
+## Policy-Based RL
+In the last lecture we approximated the value/action-value function using parameters $\theta$
+$$
+V_\theta(s) \approx V^\pi(s)
+$$
+$$
+Q_\theta(s,a) \approx Q^\pi(s,a)
+$$
+And then we generated a policy directly from the value function using a $\epsilon-$greedy approach.
+Now we will focus on model-free RL with **direct parametrization of the policy**
+$$
+\pi_\theta(s,a) = P[a | s,\theta]
+$$
+We are using $\theta$ and not $\textbf{w}$ for the parameters.
+We are actually defining a probability distribution by which we are picking actions that's conditioned both on the state and our parameters.
+
+
+## RL Categorization
+There are three types of RL algorithms:
+- Value based $\rightarrow$ we want to learn the value function ( indirectly we get the policy )
+- Policy Based $\rightarrow$ we want to learn the policy directly without learning the value function
+	- Advantages: 
+		- Better converges properties
+		- Effective in high-dimensional or continous action space
+		- Can learn stochastic policies
+	- Disadvantages:
+		- Typically converge to a local rather than a global optimum
+		- Evaluating a policy is typically inffecient and high variance
+- Actor-critic $\rightarrow$  we learn both the value function and the policy
+![[Pasted image 20260127112832.png]]
+
+**Example 1**: Rock-Paper-Scissors
+![[Pasted image 20260127114101.png]]
+Rules:
+- Scissors beats paper
+- Rock beats scissors
+- Paper beats rock
+This is a case where the optimal behavior is actually stochastic: uniform random policy is optimal ( we exploit the Nash equilibrium, if we try to play a figure more than others our opponent will figure out and it will use it against us)
+
+**Example 2**: Aliased Gridworld
+![[Pasted image 20260127114315.png]]
+We consider features of the following form ( for all N, E, S, W):
+$$\phi(s,a) = 1(\text{wall to N} , \text{a = move E})$$
+Is there a wall to the North when I try to move East? The agent can not differentiate the grey states ( they are identical to the agent ) due to these limited features
+![[Screenshot 2026-01-27 alle 11.56.12.png]]
+So the agent gets confused and can get stuck because it doesn't know it's in different positions.
+
+We want to know what is the best i can do using either value based or policy based RL:
+- Value-based RL, we parametrize the value function
+$$
+Q_\theta(s,a) = f(\phi(s,a), \theta)
+$$
+- Policy-based RL, we parametrize the policy
+$$
+\pi_\theta(s,a) = g(\phi(s,a),\theta)
+$$
+
+if you use a deterministic policy then you have to pick the same action in those two grey states: move W or E in both grey states.
+![[Pasted image 20260127134337.png]]
+Either way, it can get stuck and never each the money.
+Value-based RL learns a **near deterministic policy** so it will traverse the corridor for a long time.
+![[Pasted image 20260127134452.png]]
+An optimal **stochastic** policy (which can be learnt by Policy Based RL ) will randomly move E or W in grey states:
+![[Pasted image 20260127134512.png]]
+It will reach the goal state in a few steps with high probability.
+
+Whenever **state aliasing** occurs a stochastic policy can do better than a deterministic policy.
+
+## Policy Evaluation through Policy Objective Functions
+To optimize a policy ( the best parameters $\theta$) well we need to know that the objective should be.
+In other terms how do we measure the quality of a policy $\pi_\theta(s,a)$ parameterized by $\theta$ for understanding how much good it is.
+We have three different objective functions/metrics:
+- In episodic environments we can use the **start value**
+$$
+J_1(\theta) = V^{\pi_\theta}(s_1) = E_{\pi_\theta}[v_1]
+$$
+We use it when an environment has a specific starting state (e.g. start of the game).
+The value function $V^{\pi_\theta}(s_1)$ tells you: "If we start here and follow policy $\pi_\theta$, how much reward will we get?"
+Core idea: Expected cumulative reward starting from the starting state.
+- In continuing environments we can use the **average value**
+$$
+J_{avV}(\theta) = \sum_s d^\pi_\theta(s) V^\pi_\theta(s)
+$$
+In a continuing environment there might not be a start state ( it runs forever ).
+$d^{\pi_\theta}(s)$ is the stationary distribution ( If you run the policy for a very long time (to infinity), the probability of being in any state s stabilizes to it )
+Core idea: Expected average value across all states I visit
+
+- In continuing environments we can also use **average reward per time-step**
+$$
+J_{avV}(\theta) = \sum_s d^\pi_\theta(s)  \sum_a \pi_\theta(s,a) R^a_s
+$$
+we care about getting the most reward per time step.
+On average, per time-step, how much reward do I get?
+$d^\pi_\theta(s)$ is stationary distribution of Markov chain for $\pi_\theta$  $\rightarrow$ you can think of d as "p generalized for any state space" - discrete or continuous
+
+Core idea: If I follow this policy, what's the expected total reward I'll get?
+
+The policy gradient is essentially the same for all of them ( they follow the same gradient direction but with some difference in terms of rescaling )
+
+## Policy Optimization
+We want to find the parameters $\theta$ that maximizes the objective function $J(\theta)$
+There are many strategies but we will focus on methods based on gradient descent and methods that exploit sequential structure.
+
+## Finite Difference Policy Gradient
+We have an policy objective function $J(\theta)$ ( how much reward can i get out of this system ) and we want to make it higher: policy gradient algorithms search for a local maximum in $J(\theta)$ by ascending the gradient of the policy w.r.t parameters $\theta$
+$$
+\Delta \theta = \alpha \nabla_\theta J(\theta)
+$$  
+where:
+-  $\nabla_\theta J(\theta)$ is the **policy gradient**
+![[Pasted image 20260127143300.png]]
+- $\alpha$ is a step-size parameter
+Gradient **Ascent** ( and not descent how we have seen before ).
+Finite Differences means estimating the k-th partial derivative of objective function w.r.t $\theta$ by perturbing $\theta$ in the k-th dimension of a small amount $\epsilon$ 
+$$
+\frac{\partial J(\theta)}{\partial \theta_k} = \frac{J(\theta + \theta u_k) - J(\theta)}{\epsilon}
+$$
+We look at our objective function and we estimate it numerically by saying what happens if i perturb my parameters a little bit in each dimension separately and i check the difference between the  objective function value with this perturbation and without. It gives us a numerical estimate of the gradient but it is naive and inefficient for high dimensional parameters ( it requires n evaluations for computing policy gradient in n dimensions ).
+It is simple and works for arbitrary policies even if it is not differentiable.
+
+## Monte Carlo Policy Gradient
+We start with the easiest approach with no value functions yet.
+We compute the policy gradient analytically.
+We assume that:
+- the policy $\pi_\theta$ is differentiable whenever it is non-zero ( so it has to be differentiable only when it is actually picking actions ) and 
+- we know the gradient $\nabla_\theta \pi_\theta(s,a)$ of the policy ( it can be a softmax policy, a gaussian policy or a neural network ) and we know the gradient of this things because we have created it
+	- In other terms we choose the distribution of the policy and for this reason we know its gradient.
+
+We are going to use a trick called **Likelihood ratios**:
+![[Pasted image 20260127145312.png]]
+where $\nabla_\theta \log \pi_\theta(s,a)$ is called **score function**. 
+
+We want to see what score function looks like for two common example:
+1. Softmax policy $\rightarrow$ smoothly parameterized policy that tells us how frequently we should choose an action for each of our discrete set actions ( alternative to $\epsilon-$greedy)
+	- The softmax is **smoother** and **differentiable**, which is crucial for gradient-based learning!
+We are going to form some linear combination of features that tells us how much we'd like to take an action ( weights for actions )
+The probability of picking an action is proportional to the exponentiated value that we get when we take a linear combination of these features 
+$$
+\pi_\theta(s,a) \propto e^{\phi(s,a)^T \theta}
+$$
+Its score function is:
+$$
+\nabla_\theta \log \pi_\theta(s,a) = \phi(s,a) - E_{\pi_\theta}[\phi(s,\cdot)]
+$$
+![[Screenshot 2026-01-27 alle 15.50.18.png]]
+The feature for the action that we actually took minus the average feature for all the actions that we might have taken. 
+If a feature occurs more than usual and it gets a good reward then we want to adjust the policy to do more of that.
+![[Screenshot 2026-01-27 alle 15.51.46.png]]
+![[Screenshot 2026-01-27 alle 15.52.13.png]]
+
+2. Gaussian Policy  $\rightarrow$  in a continuous action space it is the common choice.
+	1. We can parametrize the mean as a linear combination of state features and fix the variance $\sigma^2$ ( it can be also parametrized )
+$$
+\mu(s) = \phi(s)^T \theta
+$$
+$$
+a \sim N(\mu(s),\sigma^2)
+$$
+The score function is :
+$$
+\nabla_\theta \log \pi_\theta(s,a) = \frac{(a-\mu(s))\phi(s)}{\sigma^2}
+$$
+It is very similar what we have seen previously: the action that we took minus the mean tells us how much more than usual we are doing a particular action , multiplied by the feature and than we just scale it by the variance.
+
+In both of these cases the score function takes this form of how much more than usual i am taking a particular action 
+
+### Policy Gradient Theorem
+We are going to consider **one-step** MDPs: MDPs that start in some state $s \sim d(s)$ and you take one step with one reward $r=R_{s,a}$ and the episode terminates immediately ( there is no sequence in this case ).
+
+We choose as objective function the last one ( expected reward of our policy ): we want to find the parameters which give us the most expected reward.
+![[Pasted image 20260127160951.png]]
+We want to compute gradient of it by using the likelihood ratios trick.
+![[Pasted image 20260127161004.png]]
+We take an expectation , we applied a gradient and we get something which is still an expectation.
+
+We want to do the same things in multi-step MDPs: we defined the **Policy Gradient Theorem** which can be applied to all of the 3 policy objective functions seen previously.
+![[Pasted image 20260127161756.png]]
+We have just replaced instantaneous reward $r$ with long-term value $Q^\pi(s,a)$
+It is the expectation over the score function multiplied by the action value function and it basically tells you how to adjust the policy to get more or less of that particular action multiplied how good that particular action was.
+
+### Monte Carlo Policy Gradient Algorithm
+It is very similar to an old algorithm called *reinforce*
+The idea is to update parameters by stochastic gradient ascent using the policy gradient theorem. We want to get rid of that expectation by sampling $Q^\pi_\theta(s_t,a_t)$ ( which is the term that appears in the expectation ) as an unbiased return of $v_t$
+$$
+\Delta \theta_t = \alpha \cdot \nabla_\theta \log \pi_\theta (s_t,a_t)\cdot v_t
+$$
+![[Screenshot 2026-01-27 alle 16.30.23.png]]
+![[Pasted image 20260127162539.png]]
+We want to adjust our parameter towards a little bit in the direction of this stochastic gradient ( which is the score multiplied by the sample return from that step ).
+![[Pasted image 20260127163517.png]]
+It usually gives us a very nice smooth learning curve ( RL has more jaggy curves usually ) but it requires a lot of iterations to solve a problem ( in this example hundred million iterations ): Monte Carlo Policy Gradient is very slow and it tends to be very high variance.
+
+## Actor-Critic Policy Gradient
+Instead of using the return to estimate the action-value function we are going to explicitly estimate the action value function using a **Critic** ( value function approximator ).
+$$
+Q_w(s,a) \approx Q^\pi_\theta(s,a)
+$$
+Actor-critic algorithms maintain two sets of parameters:
+- Critic $\rightarrow$ it updates action-value function parameters $w$
+	- it watches what the actor does seeing whether that's good or bad evaluating that thing
+- Actor $\rightarrow$ it updates the policy parameters $\theta$ in the direction suggested by critic
+	- It is the thing which is doing things in the world 
+The idea is to use an approximate policy gradient instead of the true policy gradient: we are going to adjust the policy in the direction which according to the critic will get more reward.
+![[Pasted image 20260127164649.png]]
