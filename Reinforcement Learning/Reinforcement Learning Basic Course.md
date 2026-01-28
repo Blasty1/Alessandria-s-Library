@@ -61,8 +61,37 @@
             - [[Reinforcement Learning Basic Course#TD  Learning with Value Function Approximation|TD  Learning with Value Function Approximation]]
             - [[Reinforcement Learning Basic Course#TD($\lambda$)  Learning with Value Function Approximation|TD($\lambda$)  Learning with Value Function Approximation]]
         - [[Reinforcement Learning Basic Course#Incremental Control Algorithm|Incremental Control Algorithm]]
-                - [[Reinforcement Learning Basic Course#Action-Value Function Approximation|Action-Value Function Approximation]]
+            - [[Reinforcement Learning Basic Course#Action-Value Function Approximation|Action-Value Function Approximation]]
             - [[Reinforcement Learning Basic Course#Linear Action-Value Function Approximation|Linear Action-Value Function Approximation]]
+        - [[Reinforcement Learning Basic Course# Convergence of prediction algorithms | Convergence of prediction algorithms ]]
+        - [[Reinforcement Learning Basic Course#Gradient Temporal-Difference Learning|Gradient Temporal-Difference Learning]]
+        - [[Reinforcement Learning Basic Course#Convergence of Control Algorithms|Convergence of Control Algorithms]]
+- [[Reinforcement Learning Basic Course#Batch Methods|Batch Methods]]
+    - [[Reinforcement Learning Basic Course#Least Square Prediction|Least Square Prediction]]
+        - [[Reinforcement Learning Basic Course#Experience Replay in Deep Q-Networks|Experience Replay in Deep Q-Networks]]
+        - [[Reinforcement Learning Basic Course#Linear Least Squares Prediction Algorithms|Linear Least Squares Prediction Algorithms]]
+    - [[Reinforcement Learning Basic Course#Least Square Control|Least Square Control]]
+        - [[Reinforcement Learning Basic Course#Least Squares Policy Iteration|Least Squares Policy Iteration]]
+        - [[Reinforcement Learning Basic Course#Least Square Q-learning|Least Square Q-learning]]
+        - [[Reinforcement Learning Basic Course#Least Squares Policy Iteration Algorithm|Least Squares Policy Iteration Algorithm]]
+- [[Reinforcement Learning Basic Course#Policy Gradient|Policy Gradient]]
+    - [[Reinforcement Learning Basic Course#Policy-Based RL|Policy-Based RL]]
+    - [[Reinforcement Learning Basic Course#RL Categorization|RL Categorization]]
+    - [[Reinforcement Learning Basic Course#Policy Evaluation through Policy Objective Functions|Policy Evaluation through Policy Objective Functions]]
+    - [[Reinforcement Learning Basic Course#Policy Optimization|Policy Optimization]]
+    - [[Reinforcement Learning Basic Course#Finite Difference Policy Gradient|Finite Difference Policy Gradient]]
+    - [[Reinforcement Learning Basic Course#Monte Carlo Policy Gradient|Monte Carlo Policy Gradient]]
+        - [[Reinforcement Learning Basic Course#Policy Gradient Theorem|Policy Gradient Theorem]]
+        - [[Reinforcement Learning Basic Course#Monte Carlo Policy Gradient Algorithm|Monte Carlo Policy Gradient Algorithm]]
+    - [[Reinforcement Learning Basic Course#Actor-Critic Policy Gradient|Actor-Critic Policy Gradient]]
+        - [[Reinforcement Learning Basic Course#Action-Value Actor-Critic|Action-Value Actor-Critic]]
+        - [[Reinforcement Learning Basic Course#Estimating the Advantage Function|Estimating the Advantage Function]]
+        - [[Reinforcement Learning Basic Course#Critics at Different Time-Scales|Critics at Different Time-Scales]]
+        - [[Reinforcement Learning Basic Course#Natural Policy Gradient|Natural Policy Gradient]]
+    - [[Reinforcement Learning Basic Course#Summary of Policy Gradient Algorithms|Summary of Policy Gradient Algorithms]]
+- [[Reinforcement Learning Basic Course#Integrating Learning and Planning|Integrating Learning and Planning]]
+    - [[Reinforcement Learning Basic Course#Model-Based Reinforcement Learning|Model-Based Reinforcement Learning]]
+        - [[Reinforcement Learning Basic Course#Learning a Model|Learning a Model]]
 # Introduction of RL
 
 Reinforcement learning is studying the science of decision making which makes it very general.
@@ -4129,3 +4158,284 @@ The policy gradient has many equivalent forms:
 ![[Pasted image 20260128120159.png]]
 Each one leads to a stochastic gradient ascent algorithm.
 Critic uses policy evaluation to estimate Q , A or V.
+
+# Integrating Learning and Planning
+
+We have seen that there are two types of RL:
+- Model-free RL $\rightarrow$ there is no model at all, the agent tries to learn the value function (and or policy) from experience.
+	- The agent does not make any effort to explicitly represent the transition dynamic or the reward function that the environment is operating on
+![[Pasted image 20260128134040.png]]
+- Model-based RL $\rightarrow$ learn a model from experience.
+	- It uses that model to **plan** a value function (and/or policy).
+	- Plan means using a model to look ahead , to think, to compute , to figure out what the right value function or the rights actions are to select in this environment
+![[Pasted image 20260128134101.png]]
+We replace the world with the agent's model of the world.
+
+## Model-Based Reinforcement Learning
+In the previous lecture we learnt policy/value function directly from experience, in this case we want to learn model directly from experience and use planning to construct a value function or policy.
+After that we want to integrate learning and planning into a single architecture.
+
+A model , in this section, is something that describes  for any given environments the agent's understanding of that environment ( how states transition to other states and how states lead to rewards ).
+
+![[Pasted image 20260128134724.png]]
+From the interaction with the real world, we get experience which is useful to build up our model. We use our model to plan ( look ahead process ), the agent starts interacting with the world understanding of the agent. The interaction between the model and the agent generates a value function/policy which can be used to act in real world.
+
+Advantages of model based RL:
+- Can efficiently learn model by supervised learning methods
+- Can reason about model uncertainty
+
+Disadvantages:
+- First learn a model and then we use that model to  construct a value function that means we have two sources of approximation error.
+
+### Learning a Model
+A model M is a representation of an MDP <S,A,P,R> parametrized by $\eta$, we will assume that state S and action A spaces are known.
+So a model
+$$
+M = <P_\eta, R_\eta>
+$$
+represents state transitions $P_\eta \approx P$ and rewards $R_\eta \approx R$.
+![[Pasted image 20260128135922.png]]
+We typically assume that state transitions and rewards are independent:
+![[Pasted image 20260128140118.png]]
+Our goal is to estimate the model $M_\eta$ from experience {$S_1,A_1,R_2,...,S_t$}.
+This is a supervised learning problem:
+![[Pasted image 20260128140708.png]]
+Taking an action $A_t$ while i am in the state $S_t$ will give me a reward of $R_{t+1}$ and i will end in a state $S_{t+1}$.
+We collect all these examples that we see from all of our trajectories that gives us our training set which can be used to learn:
+- The reward, which is a **regression** problem
+$$
+s,a \rightarrow r
+$$
+- The state, which is a **density estimation** problem
+$$
+s,a \rightarrow s'
+$$
+For both of them we should choose a proper loss function ( regression requires MSE and density estimation problem requires KL divergence ) and then find the parameters $\eta$ that minimize empirical loss.
+
+Examples of models:
+- Table Lookup Model
+- Linear Expectation Model
+- Linear Gaussian Model
+- Deep Belief Network Model
+- ecc...
+
+#### Table Lookup Model
+It is the simplest case.
+The model is an explicit MDP $\hat{P}, \hat{R}$.
+I just use the empirical count $N(s,a)$ visits to each state action pair to give me a probability distribution over we'll go next.
+![[Pasted image 20260128141942.png]]
+Alternatively:
+- We just remembers things: at each time-step $t$ we record experience tuple $<S_t, A_t, R_{t+1} ,S_{t+1}>$.
+- If we want to sample from this model , we just need to randomly pick a tuple matching the action and the state that we want to consider $<s,a,\cdot,\cdot>$
+
+**Example** AB
+![[Pasted image 20260128142429.png]]
+We have two states A and B with no discounting and 8 episodes.
+The right MDP is built by using a table lookup model from the experience.
+
+### Planning with a Model
+Planning means solving that MDP , we use that model that we have got to try and find the best thing to do.
+Starting from a model
+$$
+M_\eta = <P_\eta, R_\eta>
+$$
+We want to solve the MDP
+$$
+<S,A,P_\eta,R_\eta>
+$$
+using our favoring planning algorithm:
+- Value iteration
+- Policy iteration
+- Tree search
+- ecc...
+
+#### Sample-Based Planning
+It is a simple but powerful approach to planning.
+We use the model only for generating samples ( not as in Dynamic Programming where we want to know the probabilities behind ): we treat the model as it was the real world.
+We sample experience from our model:
+![[Pasted image 20260128151323.png]]
+And then we apply model-free RL to these samples ( they form a dataset ):
+- Monte-Carlo control
+- Sarsa
+- Q-learning
+
+**Example** AB
+We started from the real experience and we have generated a model ( we built a table-lookup model ).
+We use the model to sample experience
+![[Pasted image 20260128151740.png]]
+We learn from our sampled experience by applying the Monte-Carlo Learning 
+
+#### Planning with an Inaccurate Model
+Supposing we are dealing with a in imperfect model 
+$$
+<P_\eta, R_\eta> \neq <P,R>
+$$
+The performance of model-based Reinforcement Learning is limited to optimal policy for the approximated/imperfect MDP that we are considering.
+In other words , model-based RL is only as good as the estimated model.
+When the model is inaccurate , planning process will compute a suboptimal policy, we can:
+- Solution 1 $\rightarrow$ use directly model-free RL
+- Solution 2 $\rightarrow$ reason explicitly about model uncertainty
+
+## Integrated Architectures
+We want to bring together the best of model-free and model-based RL trying to construct something which has the advantages of both.
+
+We consider 2 sources of experience:
+1. Real Experience  $\rightarrow$  Sampled from environment ( true MDP )
+$$
+S' \approx P_{ss'}^a
+$$
+$$
+R = R_s^a
+$$
+2. Simulated Experience  $\rightarrow$ Sampled from model ( approximate MDP )
+$$
+S' \approx P_\eta(S' | S, A)
+$$
+$$
+R = R_\eta(R | S,A)
+$$
+
+We can finally distinguish three types of RL:
+- Model-free RL
+- Model Based RL
+- Dyna
+	- We learn a model from real experience and we learn and plan value function ( and/or policy ) from **real and simulated experience**.
+
+### Dyna Architecture
+![[Pasted image 20260128155359.png]]
+The ark here means that we are learning the value/policy both from simulated experience and real experience ( data from real world )
+**Dyna-Q** algorithm:
+![[Pasted image 20260128155650.png]]
+We take a real action in the world and we update both the action-value function ( SARSA update ) and the model. ( d and e ).
+Then we have the imagination/thinking loop which lasts for n steps , in each of it we sample an action A and a state S from real experience and i imagine to be in that state S and that i take that action S , i get from my model which is my reward R and next state S'. We apply then a q-learning step to that imagine transition in order to update our action-value function Q.
+![[Pasted image 20260128162258.png]]
+There are some variants of Dyna-Q algorithm that allows us to handle the situation where the environment learnt before is now different: the agent needs to explore m]ore , we have the Dyna-Q+ variant for that ( it gives a bonus for states that have not been visited yet , it is a way to motivate the agent exploration ).
+
+## Simulation-Based Search
+In this last section we are going to back off to just one part of model-based RL,  to the planning problem.
+We are going to focus on how to plan effectively.
+
+The key idea that we are going to use is sampling and forward search.
+
+### Forward Search
+Forward search algorithms select the best action by **lookahead**  , they don't explore the entire state space but  they focus on the particular current state ( focusing on what's likely to happen next in the short term future ).
+They build a search tree with the current state $s_t$ at the root using a model of the MDP to look ahead
+![[Pasted image 20260128163236.png]]
+We don't need to solve the whole MDP but just sub-MDP that starts from now : instead of learning a policy over the entire state space, forward search asks: "From my current state s_t, what's the best action if I look ahead a few steps?"
+![[Pasted image 20260128163554.png]]
+Simulation based search is a **forward search paradigm** that uses sample-based planning: we start from now and we imagine what might happen next , we image a trajectory of experience by sampling it from our model.
+![[Screenshot 2026-01-28 alle 16.44.23.png]]
+Once you have these simulated trajectories, you apply standard RL algorithms (like Q-learning, policy gradient, etc.) on them as if they were real experiences ( we can use this as a training sample for your value function, just like a real transition )
+![[Screenshot 2026-01-28 alle 16.51.37.png]]
+Example:
+![[Screenshot 2026-01-28 alle 16.53.24.png]]
+**How it works?**
+1. We simulate episodes of experience from now with the model: it means that we sample trajectories from our model
+![[Pasted image 20260128165627.png]]
+2. We apply model-free RL to these simulated episodes ( to these trajectories sampled from our models, simulated data not real one ).
+	1. Monte-Carlo control that gives us a method called **Monte Carlo search**
+	2. Sarsa that gives us a method called **TD search**
+
+### Simple Monte-Carlo Search
+This is the simplest version.
+Considering a model $M_v$ and a simulation policy $\pi$ ( the way that we are picking up actions in our imagination )
+For each action $a \in A$:
+- We simulate K episodes from current ( real ) state $s_t$
+![[Pasted image 20260128170254.png]]
+*Simulate means sampling from our model/simulation/the way our agent sees the world*
+- We evaluate each of these actions by mean return ( Monte-Carlo Evaluation )
+![[Pasted image 20260128170353.png]]
+At the end we select the current real action with maximum value
+$$
+a_t = \argmax_{a \in A} Q(s_t,a)
+$$
+
+### Monte-Carlo Tree Search
+From our current state $s_t$, we use our model $M_{v,\pi}$ to imagine k complete episodes using current simulation policy $\pi$.
+![[Pasted image 20260128171050.png]]
+We build a search tree using all the states and actions that we visited in those K episodes.
+![[Screenshot 2026-01-28 alle 17.12.19.png]]
+Instead of just evaluating the root action-value function values, we are going to evaluate every state action pair that we visit by computing its Q value.
+
+We evaluate states $Q(s,a)$ by mean return of episodes that pass through the pair (s,a)
+![[Screenshot 2026-01-28 alle 17.13.01.png]]
+where:
+- $N(s,a)$ means how many times the couple (s,a) appeared across all k episodes
+- $1(S_u, A_u = s,a)$ means "Did we visit state s and take action a at step u?"
+- $G_u$ is the return from step u onward 
+In simple terms: For each (state, action) pair in the tree, compute the **average return** you got when you were in that situation across all simulated episodes that pass through that pair in the tree.
+After search is finished, the select the current (real) action with maximum value in search tree
+$$
+a_t = \argmax_{a \in A} Q(s_t,a)
+$$
+After every simulation we are going to make our simulations improve and we are doing it in the same way we did policy improvement:
+Each simulation can be broken in two phases:
+- In-tree / Tree policy $\rightarrow$ we pick actions to maximize Q(S,A)
+	- We want to improve the policy
+- Out-tree / Default policy  $\rightarrow$  when we are beyond my tree and i don't have anything stored , we just behave according to my some default random simulation policy ( which can be naive )
+	- Pick actions randomly
+
+The algorithm is ( for each simulation we repeat the following steps):
+- Evaluate states Q(S,A) by Monte-Carlo Evaluation
+- Improve the tree policy (e.g. using $\epsilon-$greedy(Q) )
+This is basically **Monte Carlo Control** applied to simulated episodes of experience that start from the root state. 
+It converges on the optimal search tree $Q(S,A) \rightarrow q_\star(S,A)$
+
+##### Example Game of Go
+Considered as the hardest classic board game and a grand challenge task for AI.
+![[Pasted image 20260128173953.png]]
+How it works?
+- A board of 19x19 or 13x13 or 9x9
+- Black and white take turns to place down the stone at some intersection
+- There are two rules
+	- If you completely surround a stone then it gets captured and removed from the board 
+	- At the end of the game, the player with more territory wins the game 
+- You want to place stones in the way that maximizes the amount of territory you get.
+
+The reward function is defined as:
+![[Pasted image 20260128174054.png]]
+Every step that is intermediate gives no reward ( 0 ) and the final one gives 1 if black wins.
+Our policy $\pi=<\pi_B, \pi_W>$ selects moves for both players.
+The value function ( how good is position $s$) is defined as:
+![[Pasted image 20260128174256.png]]
+Value function : How much reward i get in average from this position
+Optimal value function: min max problem.
+
+We just apply the **Simple Monte Carlo Search** algorithm:
+![[Pasted image 20260128174805.png]]
+We are in a game position and we roll out some games using our simulation policy ( 4 different versions : in two of them i lost and in two i win).
+
+We just apply the **Monte-Carlo Tree Search** algorithm:
+![[Pasted image 20260128175103.png]]
+![[Pasted image 20260128175236.png]]
+We run two simulations from the root (current state ) to the end and we we save the results in the root ( we have gone through 2 results and we have one victory and one defeat 1/2).
+We do it by starting from the new nodes and so on by updating everything:
+![[Pasted image 20260128175500.png]]
+![[Pasted image 20260128175600.png]]
+![[Pasted image 20260128175544.png]]
+It just explores the good trajectories ( the one with best results, it avoids the trajectories from 0/1 for example): the assumption is that the unique sample of that trajectory is sufficient to understand how good it is going through that state
+
+Advantages of MCTS:
+- Highly selective best-first search 
+- Evaluate states dynamically ( unlike DP which requires a full view of the all state space )
+- Use sampling to break curse of dimensionality
+- Works for black box models
+- Computationally efficient , anytime and parallaleisable
+
+### TD Search
+We want to use TD instead of MC bootstrapping: TD search applies to SARSA to sub-MDP from now.
+Why should do we this?
+- For model-free RL , bootstrapping is helpful
+	- TD learning is more efficient than MC and reduces variance increasing the bias.
+	- TD($\lambda$) can be much more efficient than MC
+- For simulation-based search,  , bootstrapping is also helpful
+	- TD search is more efficient than MC search and reduces variance increasing the bias.
+	- TD($\lambda$) search can be much more efficient than MC search 
+
+Algorithm:
+- We start simulating episodes from our real current state $s_t$
+- We now estimate our action-value function Q(s,a).
+- For each step of simulation we update our action-value function by Sarsa
+$\Delta Q(S,A) $
+
+
