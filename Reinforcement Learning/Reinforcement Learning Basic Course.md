@@ -3886,7 +3886,7 @@ The value function $V^{\pi_\theta}(s_1)$ tells you: "If we start here and follow
 Core idea: Expected cumulative reward starting from the starting state.
 - In continuing environments we can use the **average value**
 $$
-J_{avV}(\theta) = \sum_s d^\pi_\theta(s) V^\pi_\theta(s)
+J_{avV}(\theta) = \sum_s d^{\pi_\theta}(s) V^{\pi_\theta}(s)
 $$
 In a continuing environment there might not be a start state ( it runs forever ).
 $d^{\pi_\theta}(s)$ is the stationary distribution ( If you run the policy for a very long time (to infinity), the probability of being in any state s stabilizes to it )
@@ -3894,7 +3894,7 @@ Core idea: Expected average value across all states I visit
 
 - In continuing environments we can also use **average reward per time-step**
 $$
-J_{avV}(\theta) = \sum_s d^\pi_\theta(s)  \sum_a \pi_\theta(s,a) R^a_s
+J_{avV}(\theta) = \sum_s d^{\pi_\theta}(s)  \sum_a \pi_\theta(s,a) R^a_s
 $$
 we care about getting the most reward per time step.
 On average, per time-step, how much reward do I get?
@@ -4000,7 +4000,7 @@ It usually gives us a very nice smooth learning curve ( RL has more jaggy curves
 ## Actor-Critic Policy Gradient
 Instead of using the return to estimate the action-value function we are going to explicitly estimate the action value function using a **Critic** ( value function approximator ).
 $$
-Q_w(s,a) \approx Q^\pi_\theta(s,a)
+Q_w(s,a) \approx Q^{\pi_\theta}(s,a)
 $$
 Actor-critic algorithms maintain two sets of parameters:
 - Critic $\rightarrow$ it updates action-value function parameters $w$
@@ -4009,3 +4009,123 @@ Actor-critic algorithms maintain two sets of parameters:
 	- It is the thing which is doing things in the world 
 The idea is to use an approximate policy gradient instead of the true policy gradient: we are going to adjust the policy in the direction which according to the critic will get more reward.
 ![[Pasted image 20260127164649.png]]
+
+The critic is solving the policy evaluation problem that we have seen before: how good is policy $\pi_\theta$ for current parameters $\theta$?
+We can use:
+- Monte Carlo Policy Evaluation
+- Temporal-Difference learning
+- TD($\lambda$)
+- Least-squares Policy Evaluation
+
+### Action-Value Actor-Critic
+This is a simple version of actor-critic algorithm based on action-value critic, we are using a linear value function approximation for it:
+$$
+Q_w(s,a) = \phi(s,a)^T w
+$$
+Linear combinations of features and weights
+![[Pasted image 20260128090750.png]]
+The critic is grounded in **real data** (the actual reward r and next state s'), while the actor trusts the critic's evaluation.
+![[Screenshot 2026-01-28 alle 09.11.17.png]]
+Approximating the policy gradient introduces bias and it may not find the right solution.
+If we choose value function approximation correctly we can avoid introducing any bias:
+![[Pasted image 20260128101725.png]]
+This is the proof:
+![[Pasted image 20260128101951.png]]
+
+In order to **reduce the variance without changing the expectation** we subtract the function B(s) from the policy gradient.
+![[Pasted image 20260128102802.png]]
+If we add or subtract any term of this form we don't change the final expectation of the old formula.
+A good baseline function is the state value function $B(S) = V^{\pi_\theta}(s)$
+Therefore we can rewrite the policy gradient using the advantage function $A^\pi_\theta(s,a)$:
+$$
+A^{\pi_\theta}(s,a) = Q^{\pi_\theta}(s,a) - V^{\pi_\theta}(s)
+$$
+The gradient of the objective functions become:
+$$
+\nabla_\theta J(\theta) = E_{\pi_\theta}[\nabla_\theta \log \pi_\theta(s,a) A^{\pi_\theta}(s,a)]
+$$
+It tells us how much better than usual a particular action a is and how to adjust our policy to achieve that action a.
+Instead of asking "how good is action a?" (Q-value), you ask "how good is action a compared to the average?" (advantage). This centers the signal and makes learning much more stable and efficient.
+The state value function $V^\pi(s)$ is the perfect baseline because it literally represents what "usual" performance is in that state.
+![[Screenshot 2026-01-28 alle 10.42.09.png]]
+### Estimating the Advantage Function
+The advantage function can significantly reduce variance of policy gradient.
+The critic should approximate and update both using two function approximators  and two parameter vectors:
+![[Pasted image 20260128104434.png]]
+Assuming we know the true value function $V^{\pi_\theta}(s)$ , the TD error is defined as:
+$$
+\delta^{\pi_\theta} = r + \gamma V^{\pi_\theta}(s') -  V^{\pi_\theta}(s)
+$$
+**The TD error is an unbiased estimate of the advantage function**
+![[Pasted image 20260128110256.png]]
+We can use the TD to compute the policy gradient replacing the advantage function term in the definition:
+$$
+\nabla_\theta J(\theta) = E_{\pi_\theta}[\nabla_\theta \log \pi_\theta(s,a) \delta^{\pi_\theta}]
+$$
+In practise we can approximate the TD error by approximating only V using only one set of critic parameters V:
+$$
+\delta_v = r + \gamma V_v(s') - V_v(s)
+$$
+We have just rewritten the policy theorem gradient by approximating things.
+
+### Critics at Different Time-Scales
+We don't want always to go all the way into the end of the episode or just take only one step because that's biased.
+We want to deal with bias and variance using different time-scals with actor critic algorithms.
+The target for our updates can be many, just a recall from what we have seen:
+![[Pasted image 20260128111148.png]]
+We can do that with the critic but what about the actor? Can we plug in it a TD($\lambda$) learning algorithm?
+We have seen two types of policy gradient up to now:
+- Monte-Carlo policy gradient which uses error from complete return 
+$$
+\Delta \theta = \alpha(v_t - V_v(s_t)) \nabla_\theta \log \pi_\theta(s_t,a_t)
+$$
+- Actor-critic policy gradient which uses the one step TD error -> TD(0)
+$$
+\Delta \theta = \alpha ( r + \gamma V_v(s_{t+1}) -V_v(s_t) ) \nabla_\theta \log \pi_\theta(s_t,a_t)
+$$
+
+We can try to define a **policy gradient with Eligibiliy Traces** as we have done for value based reinforcement learning.
+- Like Forward-view TD($\lambda$), we can mix over time-scales
+$$delta \theta = \alpha (v_t^\lambda -V_v(s_t)) \nabla_\theta \log \pi_\theta(s_t,a_t)
+$$
+with $v_t^\lambda - V_v(s_t)$ is a biased estimate of advantage function
+
+- Like Backward-view TD($\lambda$),  we can also use eligibility traces
+![[Pasted image 20260128112707.png]]
+
+This idea is useful for how to make our actor make use of critics from many different steps all the way into the future.
+Unlike the MC we can apply it online in non-finite sequences.
+
+### Natural Policy Gradient
+Vanilla policy gradient updates parameters directly in parameter space:
+$$
+\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)
+$$
+This computes: _"If I change parameter θ₁ by a tiny amount, how much does my objective J improve?"
+Let's suppose our policy is a Gaussian with mean $\mu$, we can parametrize it in two ways:
+1. $\mu = \theta$
+2. $\mu = 2\cdot \theta$ ( we are just scaling the parameter)
+The **same policy** would produce different gradients in these two versions! It means that the directions changes:
+![[Screenshot 2026-01-28 alle 11.49.59.png]]
+The vanilla gradient depends on how you arbitrarily wrote down your equations, not on the actual policy behavior.
+**Valilla gradient** is sensitive to these reparametrisations.
+![[Pasted image 20260128115534.png]]
+**Natural Policy Gradient** is pamametrisation independent : it moves in policy space instead.
+$$
+\nabla_\theta^\text{nat} \pi_\theta(s,a) = G_\theta^{-1} \nabla_\theta \pi_\theta(s,a)
+$$
+Where $G_\theta$ is the fisher information matrix
+$$
+G_\theta = E_{\pi_\theta}[ \nabla_\theta \log \pi_\theta(s,a) \nabla_\theta \log \pi_\theta(s,a)^T]
+$$
+It measures how much the policy distribution actually changes when you change the parameters.
+![[Screenshot 2026-01-28 alle 11.56.14.png]]
+If we want to reduce the variance we can use the compatible function approximation $\nabla_w A_w(s,a) = \nabla_\theta \log \pi_\theta(s,a)$ and the natural policy gradient simplifies to
+![[Pasted image 20260128115905.png]]
+
+
+## Summary of Policy Gradient Algorithms
+The policy gradient has many equivalent forms:
+![[Pasted image 20260128120159.png]]
+Each one leads to a stochastic gradient ascent algorithm.
+Critic uses policy evaluation to estimate Q , A or V.
