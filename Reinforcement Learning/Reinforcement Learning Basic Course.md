@@ -432,11 +432,10 @@ An RL agent can be
 
 ![intro_rl-36.jpg](images/f9fb3246-2ca8-4f81-9f75-e1bf6f74851a.png)
 
-  
+![[Screenshot 2026-01-30 alle 16.19.08.png]]
 
 There are 2 problems related to sequential decision making:
 
-  
 
 1. Reinforcement Learning problem:
 
@@ -4738,3 +4737,16 @@ This Bayes-Adaptive MDP can be solved by dynamic programming  through the **Gitt
 ### Summary
 ![[Screenshot 2026-01-30 alle 14.15.07.png]]
 All the ideas seen here can be extended to the mdp case
+
+
+# Most important algorithms
+We will take a look at the approaches used to improve the stability of the stochastic policy gradient method:
+- **PPO** Proximal Policy Optimization
+- **TRPO** Trust Region Policy Optimization
+- **A2C** Advantage Actor-Critic and **ACKTR**
+- **SAC** Soft Actor-Critic
+- **DDPG**  Deep Deterministic policy gradients
+The overall idea is to increase the training velocity but it is a bad idea to take large update which can ruin the policy.
+We want to avoid to do big updates because we would waste our policy ( the future updates will not recover it ). The naive approach is to use a small learning rate but it slows down too much the convergence, one approach is called *trust region* optimization extension which constraints the step taken during the optimization to limit its effect on the policy: we want prevent a dramatic update of the policy so we check the KL divergency between the old and the new policy.
+
+
