@@ -92,16 +92,46 @@
 - [[Reinforcement Learning Basic Course#Integrating Learning and Planning|Integrating Learning and Planning]]
     - [[Reinforcement Learning Basic Course#Model-Based Reinforcement Learning|Model-Based Reinforcement Learning]]
         - [[Reinforcement Learning Basic Course#Learning a Model|Learning a Model]]
+            - [[Reinforcement Learning Basic Course#Table Lookup Model|Table Lookup Model]]
+        - [[Reinforcement Learning Basic Course#Planning with a Model|Planning with a Model]]
+            - [[Reinforcement Learning Basic Course#Sample-Based Planning|Sample-Based Planning]]
+            - [[Reinforcement Learning Basic Course#Planning with an Inaccurate Model|Planning with an Inaccurate Model]]
+    - [[Reinforcement Learning Basic Course#Integrated Architectures|Integrated Architectures]]
+        - [[Reinforcement Learning Basic Course#Dyna Architecture|Dyna Architecture]]
+    - [[Reinforcement Learning Basic Course#Simulation-Based Search|Simulation-Based Search]]
+        - [[Reinforcement Learning Basic Course#Forward Search|Forward Search]]
+        - [[Reinforcement Learning Basic Course#Simple Monte-Carlo Search|Simple Monte-Carlo Search]]
+        - [[Reinforcement Learning Basic Course#Monte-Carlo Tree Search|Monte-Carlo Tree Search]]
+                - [[Reinforcement Learning Basic Course#Example Game of Go|Example Game of Go]]
+        - [[Reinforcement Learning Basic Course#TD Search|TD Search]]
+            - [[Reinforcement Learning Basic Course#Dyna-2|Dyna-2]]
+- [[Reinforcement Learning Basic Course#Exploration and Exploitation|Exploration and Exploitation]]
+    - [[Reinforcement Learning Basic Course#Multi-armed bandit|Multi-armed bandit]]
+        - [[Reinforcement Learning Basic Course#Regret|Regret]]
+        - [[Reinforcement Learning Basic Course#Greedy Algorithm|Greedy Algorithm]]
+        - [[Reinforcement Learning Basic Course#$\epsilon-$Greedy Algorithm|$\epsilon-$Greedy Algorithm]]
+        - [[Reinforcement Learning Basic Course#Decaying $\epsilon_t -$Greedy Algorithm|Decaying $\epsilon_t -$Greedy Algorithm]]
+        - [[Reinforcement Learning Basic Course#Lower Bound|Lower Bound]]
+        - [[Reinforcement Learning Basic Course#Upper Confidence Bound UCB|Upper Confidence Bound UCB]]
+            - [[Reinforcement Learning Basic Course#Hoeffding's Inequality|Hoeffding's Inequality]]
+            - [[Reinforcement Learning Basic Course#Calculate UCB|Calculate UCB]]
+            - [[Reinforcement Learning Basic Course#UCB1 Algorithm|UCB1 Algorithm]]
+        - [[Reinforcement Learning Basic Course#Bayesian Bandits |Bayesian Bandits ]]
+            - [[Reinforcement Learning Basic Course#Bayesian UCB|Bayesian UCB]]
+            - [[Reinforcement Learning Basic Course#Thompson Sampling|Thompson Sampling]]
+        - [[Reinforcement Learning Basic Course#Information State Search|Information State Search]]
+        - [[Reinforcement Learning Basic Course#Summary|Summary]]
+$$
+\newcommand{\argmax}{\text{arg max}}
+$$
+$$
+\newcommand{\w}{\textbf{w}}
+$$
 # Introduction of RL
 
 Reinforcement learning is studying the science of decision making which makes it very general.
 
-  
-
 Reinforcement learning is different from other machine learning paradigms because:
-
-  
-
 1. There is no supervisor, only reward signal ( bad/good behavior , but not quantification of it like how much bad it was)
 
 2. The feedback is not instantaneous, it can be delayed from a set of steps
@@ -112,11 +142,7 @@ Reinforcement learning is different from other machine learning paradigms becaus
 
 5. The agent is influencing the data that he is actually seeing ( he moves in the world that he is studying we can say )
 
-  
-
 A reward is a scalar feedback signal ( a number ) that says how well is the agent doing at that time step $R_t$. The job of the agent is to sum up these rewards and get as much reward as possible in total.
-
-  
 
 > All goals can be described by the maximisation of expected cumulative reward
 
@@ -4436,6 +4462,279 @@ Algorithm:
 - We start simulating episodes from our real current state $s_t$
 - We now estimate our action-value function Q(s,a).
 - For each step of simulation we update our action-value function by Sarsa
-$\Delta Q(S,A) $
+$$
+\Delta Q(S,A) = \alpha ( R + \gamma Q(S', A') - Q(S,A))
+$$
+- We select actions by acting greed w.r.t our action-values $Q(s,a)$
+The unique thing that changes w.r.t. Monte Carlo Search is that way we update our action-value function by using temporal differences.
+
+#### Dyna-2
+We want apply the DYNA algorithm ( combines both real and simulate experience ) with forward search algorithm.
+Dyna-2 maintains two value functions with two sets of feature weights:
+- Long-Term memory wihch is updated from real experience using TD learning
+- Short-term ( working ) memory which is updated from simulated experience using TD search
+We sum these two together to give us our overall value function.
+![[Pasted image 20260129104632.png]]
 
 
+# Exploration and Exploitation
+Every time we are decision-making online , the same choice comes up again and again:
+- Exploitation $\rightarrow$ make the best decision given current information
+- Exploration  $\rightarrow$ do something gathering more information
+The best long-term strategy may involve short-term sacrifices ( we choose exploration over exploitation ) in order to gather enough information to make the best overall decision.
+
+Examples:
+![[Pasted image 20260129110207.png]]
+
+Exploration and Exploitation approaches:
+- Naive Exploration $\rightarrow$ explore random actions / add noise to greedy policy ($\epsilon-$greedy)
+- Optimistic Initialisation $\rightarrow$  assume the best until proven otherwise
+- Optimism in the Face of Uncertainty $\rightarrow$  prefer actions with highest uncertainty 
+	- If I'm uncertain, try it!
+- Probability Matching $\rightarrow$  select actions according to probability they are best
+	- Pick action with highest probability of being best
+- Information State Search $\rightarrow$  lookahead to see how information helps reward 
+	- Correct but computationally very difficult because our state space blows up to something massively more complicated that we had before.
+	- It asks: what action gives me the most reward **AND teaches me something useful**?
+![[Screenshot 2026-01-29 alle 11.18.54.png]]
+![[Screenshot 2026-01-29 alle 11.29.32.png]]
+
+## Multi-armed bandit
+![[Pasted image 20260129113622.png]]
+Multi-armed bandit is basically a simplification of the mdp framework where we just have a set of $m$ actions/arms A and a reward function R, we throw away the value space and the transition function.
+$$
+<A,R>
+$$
+Reward function is an unknown probability distribution over rewards: given an action/arm what distribution over reward we get with that machine.
+$$
+R^a(r)= P[R=r | A=a]
+$$
+At each step $t$ the agent selects an acton $A_t \in A$ and the environment generates a reward $r_t \sim R^{a_t}$ and our goal is to maximise cumulative reward
+$$
+\sum_{\tau=1}^t r_\tau
+$$
+### Regret
+- The action-value is the mean reward for action a:
+$$
+Q(a) = E[r|a]
+$$
+No value here.
+- The optimal value $v_*$
+$$
+v_* = Q(a^*) = \max_{a \in A} Q(a)
+$$
+- The regret is the opportunity loss for ones step 
+$$
+I_t = E[v_* - q(A_t)]
+$$
+It tells us how much worse we do than $v_*$ : in some step we don't do the best choice and we want understand the opportunity loss ( the difference between the maximum we could have got at that step and the actual action function value )
+
+- The total regret is the total opportunity lost
+$$
+L_t = E\left[\sum_{\tau=1}^t v_* - q(A_\tau)\right]
+$$
+Maximizing the cumulative reward is equal to minimize the total regret.
+
+The regret  can be also expressed as a function of gaps and counts:
+- The gap $\Delta_a$ is the difference in value between some action a and the optimal action $a*$ 
+$$
+\Delta_a = V^* - Q(a)
+$$
+The gap between the best machine i could have pulled and some suboptimal machine.
+- The count $N_t(a)$ is expected number of selections for action a
+	- How many times you use that machine.
+
+We can rewrite the regret as:
+![[Pasted image 20260129120928.png]]
+Good algorithms should ensure small counts for large gaps but the problem is that we don't know gaps ( $v_*$ is not known ).
+
+How this regret look like over time by considering our familiar algorithms?
+![[Pasted image 20260129132730.png]]
+Randomly picking among our actions means that these actions can introduce some opportunity loss and:
+- if an algorithm forever explores ,  it will have linear total regret ( greedy algorithm , blue line)
+-  if an algorithm never explores ,  it will have linear total regret ( $\epsilon-$greedy algorithm , blue line)
+We want to achieve sublinear total regret ( black line ).
+
+### Greedy Algorithm
+We will consider algorithms that estimate action-value function $Q_t(a) \approx q(a)$  and i want to estimate the value of each action by Monte-Carlo Evaluation
+$$
+Q_t(a) = \frac{1}{N_t(a)} \sum_{t=1}^T 1(a_t=a)r_t
+$$
+The greedy algorithm just selects action with highest value
+$$
+a_t^* = \argmax_{a \in A} \hat{Q_t}(a)
+$$
+Greedy algorithm can lock into suboptimal action forever and it has linear total regret.
+
+### $\epsilon-$Greedy Algorithm
+It works in this way:
+- We select the best action $1 = \argmax_{a \in A} \hat(Q(a))$ with probability $1-\epsilon$
+- We select a random action with probability $epsilon$
+It continues to explore forever and the constant $\epsilon$ ensures minimum target
+$$
+I_t \geq \frac{\epsilon}{A} \sum_{a \in A} \delta_a
+$$
+It has linear total regret
+
+### Decaying $\epsilon_t -$Greedy Algorithm
+If we just decay our epsilon over time: we gradually reduce the value of a parameter over time or iterations during training or optimization.
+Examples of decay strategies
+![[Screenshot 2026-01-29 alle 13.54.41.png]]
+We will consider the following schedule:
+$$
+\begin{aligned}
+c &> 0\\
+d &= \min_{a| \Delta_a > 0} \Delta_i\\
+\epsilon_t &= \min\left\{1, \frac{c |A|}{d^2 t}\right\}
+\end{aligned}
+$$
+This algorithm has logarithmic asymptotic total regret but It can not be used in practise because it requires knowing $v_*$ ( in the definition of gap ) in advance.
+We want to find an algorithm with sublinear regret  ( like this ) for any multi-armed bandit without requiring the knowledge of R.
+
+### Lower Bound
+There is a theorem that says no algorithms can do better than a certain lower bound.
+We want to push closer and closer towards this lower bound.
+The lower bound is actually logarithmic in number of steps.
+![[Pasted image 20260129141438.png]]
+In general the performance of an algorithm depends on how much the optimal arm/action is similar to the others , the hardest problems are the one where we have similar-looking arms ( measured using the KL divergence $KL(R^a  || R^a_\star$ ) with different means ( using gaps $\Delta_a$ )
+![[Screenshot 2026-01-29 alle 14.15.51.png]]
+
+### Upper Confidence Bound UCB
+We are going to use the strategy of **Optimism in the Face of Uncertainty**: let's suppose there are 3 different arms ( blue, red and green ) and we have 3 distribution over the actual Q values ( our belief ) with a mean that can be seen on the x axis.
+![[Pasted image 20260129142506.png]]
+Which action/arm/distribution we pick?  This principle says to do not take the one you currently believe is best ( green one ) but take the one which has the most potential to be the best ( blue one has the most potential to actually have a mean which is somewhere to the full right close to 3 or 4 ).
+![[Pasted image 20260129142802.png]]
+After picking blue action few times, our beliefs/distributions are changed and now we will about to select another action/arm/distribution which has much more potential and this process goes further until we get the best action.
+We will use the general idea called **Upper Confidence Bounds**: we want to estimate an upper confidence $\hat{U_t}(a)$ for each action value in order that we have $Q(a) \leq \hat{Q_t}(a) + \hat{U_t}(a)$ with high probability ( it is the tale of the distribution what we just looked at ).
+We don't want to estimate only the mean of the distribution but the mean + something in order to be in the tale of the distribution.
+$\hat{U_t}(a)$ depends on th number of times $N(a)$ that action has been selected:
+- If we selected it few times we have a small $N_t(a)$ and we will have a large $\hat{U_t}(a)$ ( the distribution will be wider due to uncertainty )
+	- The Q value generated is uncertain ( the upper bound is very high )
+- If we selected it a lot of times we have a big $N_t(a)$ and we will have a small $\hat{U_t}(a)$ ( the distribution will be narrower due to much more certainty )
+	- The Q value generated is accurate ( the upper bound is so small that it is correct )
+We want to select the action that maximizes the Upper Confidence Bound UCB
+$$
+a_t = \argmax_{a\in A}\left(\hat{Q_t}(a) + \hat{U_t}(a)\right)
+$$
+
+#### Hoeffding's Inequality
+It is a statistical theorem that says:
+![[Pasted image 20260129171641.png]]
+We can bound this probability with that term and this is true for any distribution.
+We apply this theorem to the bandit case: 
+$$
+P[Q(a) > \hat{Q_t}(a) + U_t(a)] \leq e^{-2 N_t(a) U_t(a)^2}
+$$
+#### Calculate UCB
+We pick a probability p that true value exceeds UCB ( that we make a mistake ) and we solve the Hoeffding's Inequality for $U_t(a)$:
+![[Pasted image 20260129173324.png]]
+As we pick things more and more, the bonus term is going to get lower ( $N_t(a)$ is at the denominator ) and the opposite is also true.
+We don't fix $p$ to a specific value ( e.g. 95% ) instead we slowly increase $p$ over time to be more and more confident that we have included the true Q value in our interval.
+$$
+p = t^{-4}
+$$
+$$
+U_t(a) = \sqrt{\frac{2\log t}{N_t(a)}}
+$$
+
+#### UCB1 Algorithm
+Every step we estimate our Q values by taking this Monte Carlo estimate ( empirical mean ) and we add the bonus term which only depends on the number of time steps and the number of times our agent picked that specific action. We pick the action with the highest total value:
+$$
+a_t = \argmax_{a \in A}\left\{ Q(a) + \sqrt{\frac{2\log t}{N_t(a)}} \right\}
+$$
+The UCB1 algorithm achieves logarithmic asymptotic total regret:
+$$
+\lim_{t \rightarrow \infty} L_t \leq 8 \log t \sum_{a | \Delta_a> 0} \Delta_a 
+$$
+
+### Bayesian Bandits 
+We can consider a **bayesian approach** to the **multi-armed bandits with upper confidence idea**.
+Bayesian bandits exploit prior knowledge of rewards: we want to make an assumption about the reward distribution $p[R^a]$. 
+
+We consider a distribution $p[Q | \w]$  over action-value function with parameter $\w$ ( the parameters can be independent gaussian parameters for each of our arm/action $\w = [\mu_1 , \sigma^2_1 ,.. , \mu_k . \sigma_k^2$ for  $a \in 1,k]$).
+Bayesian methods compute posterior distribution over the parameters $\w$ given the rewards seen so far
+$$
+p[\w | R_1, . . . , R_t]
+$$
+We use this posterior distribution to guide exploration:
+- Upper Confidence Bounds ( Bayesian UCP )
+- Probability Matching ( Thompson sampling )
+We got better performance if prior knowledge is accurate.
+
+#### Bayesian UCB
+![[Pasted image 20260130100405.png]]
+- First of all we compute our posterior given the data seen so far
+$$
+p[\w | R_1 , . . . , R_{t-1}]
+$$
+We can do it by applying the bayesian law $p[Q(a) | R_1, . . . , R_{t-1}] = p[Q(a) | \w] \cdot p[\w | R_1, . . . , R_{t-1}]$.
+- We estimate the upper confidence from posterior
+$$
+U_t(a) = c \sigma(a)
+$$
+Where $\sigma(a)$ is the standard deviation of $P(Q(a) | \w)$ ( we move using multiples of the standard deviation to reach a specific point close to the tail )
+- We pick the action that maximizes $Q(a) + c \sigma(a)$
+
+#### Thompson Sampling
+Instead of the upper confidence bound idea, we can apply **probability matching**: it selects an action $a$ according to probability that $a$ is the best one.
+In other words it selects actions based on how often each option is optimal, rather than always choosing the single best option.
+$$
+\pi(a)$ = P\left[ Q(a) = \max_{a'} Q(a') | R_1, . . . , R_{t-1} \right]
+$$
+The probability you choose action $a$ equals the probability that $a$ is actually the optimal action, given the rewards you've observed so far.
+When you're uncertain about which action is truly best, some uncertain actions might have a higher probability of being optimal than you realize
+Probability matching allocates some tries to these uncertain actions based on their potential optimality. However, this can be **inefficient** because you're wasting attempts on suboptimal actions instead of consistently exploiting the best one.
+it's hard to compute $\pi(a)$ analytically from the posterior distribution—meaning in practice, you'd need numerical methods or approximations to actually calculate these probabilities from your observed data.
+
+**Thompson Sampling** is sample-based probability matching algorithm for multi-arms bandits:
+$$
+\pi(a) = E\left[ \textbf{1}\left(Q(a) = \max_{a'} Q(a')\right) | R_1, . . . , R_{t-1} \right]
+$$
+It uses the bayes law to compute posterior distribution
+$$
+p_\w(Q | R_1, . . . , R_{t-1})
+$$
+The is that : every step we sample the action-value function Q(a) from our posterior and we select the action maxisimising the sample $A_t = \argmax_{a \in A} Q(a)$.
+Thompson sampling works for every type of distribution but for a specific class of problem , for Bernoulli bandits, it achieves Lai and robbins lower bound on regret.
+
+### Information State Search
+Exploration is useful because it gains information and if we try to quantify the value of the information that we got we can trade it perfectly:
+- How much reward a decision maker would be prepared in order to have that information.
+- Value of information is trying to quantify the value in terms of units of reward of actually taking an exploratory action
+We can think of this as the difference between the long-term reward after getting information and the immediate reward.
+We want to explore uncertain situations more but in an optimal way in order to reach an optimal trade off  between exploration and exploitation.
+
+We are going to transform our Bandit problem ( seen so far as a one-step decision making problem ) back into an mdp ( into a sequential decision making problem ).
+We are keeping at each state an *information state $\tilde{s}$* which is a statistic of the history ( $\tilde{s_t} = f(h_t)$ ) that summarizes all information accumulated so far ( e.g. i have pulled this lever 3 times and this lever 5 times ).
+Each action $a$ causes a transition to a new information state $\tilde{s}'$ with probability $\tilde{P}^a_{\tilde{s} \tilde{s}'}$ ( e.g. i pulled the livers 3 times and 5 times and i pull the second liver again, i will end in a new information state where i have pulled the livers 3 times and 6 times ): we are transitioning from information state to information state.
+We have a very large mdp because it contains all the possible information states:
+$$
+\tilde{M} = < \tilde{S}, A, \tilde{P}, R, \gamma >
+$$
+
+**Example:** Bernoulli Bandits
+A Bernoulli bandit is a multi-armed bandit where each arm has a hidden probability of success.
+Each arm $a$ has an unknown probability $\mu_a$ (e.g., arm 1 gives reward 1 with probability 0.3, arm 2 gives reward 1 with probability 0.7, etc.)
+![[Screenshot 2026-01-30 alle 12.18.42.png]]
+The information state , in this example, is $\tilde{S} = <\alpha, \beta>$ where:
+- $\alpha_a$ counts the pulls of arm $a$ where reward was 0
+- $\beta_a$ counts the pulls of arm $a$ where reward was 1
+
+We formulated the bandit as an **infinite MDP** over information states which can be resolved using RL, we can apply:
+- Model-free RL (e.g. Q-learning )
+- Bayesian model-based RL (e.g. Gittins indices )
+	- This approach is known as **Bayes-adaptive** RL which finds a bayes-optimal exploration/exploitation trade-off with respect to prior distribution
+
+**Example:** Bayes-Adaptive Bernoulli Bandits
+![[Pasted image 20260130140557.png]]
+We start with some $Beta(\alpha_a, \beta_a)$ prior over reward function $R^a$.
+Each time $a$ is selected we update the posterior for $R^a$
+![[Pasted image 20260130140535.png]]
+We define two counters: succeed counter and failure counter.
+This defines transition function probability $\tilde{P}$ for the Bayes-adaptive MDP where the information state $<\alpha,\beta>$ corresponds to reward model $Beta(\alpha,\beta)$ and each state transition corresponds to a Bayesian model update.
+![[Pasted image 20260130140916.png]]
+This Bayes-Adaptive MDP can be solved by dynamic programming  through the **Gittings index algorithm**. Exact solution to Bayes-adaptive MDP is typically impossible due the size of the information state space ( it is too large ).
+
+### Summary
+![[Screenshot 2026-01-30 alle 14.15.07.png]]
+All the ideas seen here can be extended to the mdp case
