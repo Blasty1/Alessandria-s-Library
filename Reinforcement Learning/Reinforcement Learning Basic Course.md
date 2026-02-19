@@ -9,7 +9,7 @@
     - [[Reinforcement Learning Basic Course#Value Function|Value Function]]
     - [[Reinforcement Learning Basic Course#Bellman Equation for MRPs|Bellman Equation for MRPs]]
     - [[Reinforcement Learning Basic Course#Markov Decision Process MDP|Markov Decision Process MDP]]
-        - [[Reinforcement Learning Basic Course#Stochastic Policy|Stochastic Policy]]
+        - [[Reinforcement Learning Basic Course#Stochastic Policy|Stochastic Policy]]x
         - [[Reinforcement Learning Basic Course#Value function|Value function]]
         - [[Reinforcement Learning Basic Course#Bellman Expectation Equation|Bellman Expectation Equation]]
         - [[Reinforcement Learning Basic Course#Optimal Value Function|Optimal Value Function]]
@@ -121,6 +121,8 @@
             - [[Reinforcement Learning Basic Course#Thompson Sampling|Thompson Sampling]]
         - [[Reinforcement Learning Basic Course#Information State Search|Information State Search]]
         - [[Reinforcement Learning Basic Course#Summary|Summary]]
+- [[Reinforcement Learning Basic Course#Most important algorithms|Most important algorithms]]
+    - [[Reinforcement Learning Basic Course#A2C|A2C]]
 $$
 \newcommand{\argmax}{\text{arg max}}
 $$
@@ -4739,6 +4741,7 @@ This Bayes-Adaptive MDP can be solved by dynamic programming  through the **Gitt
 All the ideas seen here can be extended to the mdp case
 
 
+****
 # Most important algorithms
 We will take a look at the approaches used to improve the stability of the stochastic policy gradient method:
 - **PPO** Proximal Policy Optimization
@@ -4749,4 +4752,75 @@ We will take a look at the approaches used to improve the stability of the stoch
 The overall idea is to increase the training velocity but it is a bad idea to take large update which can ruin the policy.
 We want to avoid to do big updates because we would waste our policy ( the future updates will not recover it ). The naive approach is to use a small learning rate but it slows down too much the convergence, one approach is called *trust region* optimization extension which constraints the step taken during the optimization to limit its effect on the policy: we want prevent a dramatic update of the policy so we check the KL divergency between the old and the new policy.
 
+## A2C
+Advanced Actor Critic algorithm is a policy gradient learning very similar to the basic Actor Critic but it runs with parallel environment collection and batch updates.
+A2C collects experience from N parallel environments simultaneously, then does batch updates on all that data at once.
+We get a more stable gradient ( instead of updating on one trajectory , we are averaging over N trajectories in parallel ).
+![[Screenshot 2026-01-30 alle 18.46.56.png]]
+Algorithm:
+- Initialize network parameters $\theta$ width random values
+- Play N steps in the environment using the current policy $\pi_\theta$ and saving tuples of ( $s_t , a_t, r_t$ )
+- $G_t$=0 if the end of the episode is reached or it is equal to $V_\theta(s_t)$
+- For $i=t-1 . . .  t_{start}$ ( backward loop, it is a computational efficiency trick )
+	- We accumulate the return ( update the variable ) $G_t \leftarrow r_i + \gamma G_t$
+	- Accumulate the policy gradients where the advanced function is now between the return and the expected return from the $s_i$ state ( which is estimated by $V_\theta(s_i)$)
+$$
+\partial \theta_\pi = \partial \theta_\pi + \nabla_\theta \log \pi_\theta(a_i | s_i) (G_t-V_\theta(s_i))
+$$
+	- Accumulate the value gradients 
+$$
+\partial \theta_v = \partial \theta_v  + \frac{\partial \left( (G_t - V_\theta)^2 \right)}{\partial \theta_v} 
+$$
+- We update the parameters of the neural network by moving in the direction of the policy gradients $\partial \theta_\pi$ and in the opposite direction of the value gradients $\partial \theta_v$
+- We repeat from the 2 step until convergence
 
+This algorithm requires usually an **entropy** term which measures the uncertainty or randomness in our agent's policy and it should be inserted in the loss function.
+In our  Pendulum code, the agent samples actions from a Gaussian (Normal) distribution:
+- **High Entropy:** The distribution is wide and flat; the agent is unsure and tries many different actions (Exploration).
+- **Low Entropy:** The distribution is a sharp peak; the agent always picks the same action (Exploitation).
+In our case we add the **negative** entropy term to the loss function: the optimizer tries to minimize the loss by increasing the entropy ( exploring more ).
+
+
+**Tuning Hyperparameters**:
+The golden rule is to tweak one option at a time and make conclusions carefully, as the whole process is stochastic.
+We usually start with the original hyperparameters and we perform the following experiments:
+- Increase the learning rate ( it starts very low as 0.001 )
+- Increase the entropy beta 
+- Change the count of environments that we are using to gather experience
+- Tweak the size of the batch
+
+
+## PPO
+The core improvement over the classic A2C method is changing the formula used to estimate the policy gradients. Instead of using the gradient of logarithm probability of the action taken, the Proximity Policy Optimizationn  method uses a different objective: the ratio between the new and the old policy scale by the advantages.
+**It tries to solve the instability caused by updates that are too large.**
+$$
+\begin{aligned}
+\text{A2C : } J_\theta = E_t\left[ \nabla_\theta \log \pi_\theta (a_t |s_t) A_t \right] \\
+\text{PPO : } J_\theta = E_t\left[ \frac{\pi_\theta(a_t | s_t)}{\pi_{\theta_\text{old}}(a_t|s_t)}  A_t \right] \\
+\end{aligned}
+$$
+It is an off-policy algorithm that applies **importance sampling** strategy.
+In order to avoid big updates to the policy weights , we should use the clipped objective :
+$$
+\begin{aligned}
+r_t(\theta) &=  \frac{\pi_\theta(a_t | s_t)}{\pi_{\theta_\text{old}}(a_t|s_t)}  \\
+J_\theta^\text{clipped} &= E_t[\min\left(J_\theta,\text{clip}( r_t (\theta) , 1+ \epsilon , 1-\epsilon )\right)]
+\end{aligned}
+$$
+If the update wants to change the policy by more than (for example) 20%, PPO "clips" the gradient. The agent stops getting "credit" for moving further away, which removes the incentive to make massive, risky changes to the weights.
+By varying $\epsilon$ we can limit the size of the update, the ratio will always be in the following interval:
+$$
+[1-\epsilon, 1+\epsilon]
+$$
+![[Screenshot 2026-02-02 alle 14.02.38.png]]
+PPO almost always uses **Generalized Advantage Estimation (GAE)**:
+GAE introduces a new hyperparameter, $\lambda$, to balance bias and variance in our advantage estimate:
+- **High Variance (TD-lambda=1):** $G_t - V_\theta$. It’s unbiased but very "noisy" because it depends on the whole episode's rewards.
+	- Same estimation proposed by 2AC f we choose $\lambda=1$
+- **High Bias (TD-lambda=0):** This only looks 1 step ahead ($r_{t+1}+\gamma V(s_{t+1}) - V_\theta(s_t)$). It's very stable but might be wrong because it relies too much on the Critic's (possibly incorrect) estimate.
+$$
+    \hat{A}_t = \delta_t + (\gamma\lambda)\delta_{t+1} + (\gamma\lambda)^2\delta_{t+2} + \dots
+$$
+where $\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)$ is the temporal difference (TD) error.
+PPO uses a different training procedure
+![[Screenshot 2026-02-02 alle 14.20.12.png]]

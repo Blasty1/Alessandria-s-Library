@@ -1,78 +1,63 @@
 {
   "main": {
-    "id": "5f99079cb5647015",
+    "id": "92aa6e87080435a2",
     "type": "split",
     "children": [
       {
-        "id": "39f8c6b7e8c418a1",
+        "id": "4543d0d402a03908",
         "type": "tabs",
-        "dimension": 60.81661891117478,
+        "dimension": 53.99746192893401,
         "children": [
           {
-            "id": "7b9fa535c852d8e5",
+            "id": "b5350a8449829593",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Reinforcement Learning/Reinforcement Learning Basic Course.md",
+                "file": "Reinforcement Learning/Papers on Deep Reinforcement Learning.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "Reinforcement Learning Basic Course"
+              "title": "Papers on Deep Reinforcement Learning"
             }
           }
         ]
       },
       {
-        "id": "433a9d5094f44c2b",
+        "id": "bca6af5a75d595d0",
         "type": "tabs",
-        "dimension": 39.183381088825215,
+        "dimension": 46.00253807106599,
         "children": [
           {
-            "id": "9ca5b1efb2184c53",
+            "id": "f4b9acf030bbb3f0",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Templates/TOC.md",
-                "mode": "source",
-                "source": true
-              },
-              "icon": "lucide-file",
-              "title": "TOC"
-            }
-          },
-          {
-            "id": "83d69e8c85a7317d",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Reinforcement Learning/Reinforcement Learning Basic Course.md",
+                "file": "Reinforcement Learning/Papers on Deep Reinforcement Learning.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Reinforcement Learning Basic Course"
+              "title": "Papers on Deep Reinforcement Learning"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
   },
   "left": {
-    "id": "b890d386a69120ba",
+    "id": "fd5ce1542325a9c0",
     "type": "split",
     "children": [
       {
-        "id": "138130071a5d4df6",
+        "id": "95b75930a22a6ece",
         "type": "tabs",
         "children": [
           {
-            "id": "a8002af416a7a9f2",
+            "id": "749c2946c3b5f68b",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -85,12 +70,12 @@
             }
           },
           {
-            "id": "164864e7a5d900b4",
+            "id": "98361812583fc95c",
             "type": "leaf",
             "state": {
               "type": "search",
               "state": {
-                "query": "%F0%9F%A4%96%201%20Reinforcement%20Learning%20-%20Basic%20Course",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -102,7 +87,7 @@
             }
           },
           {
-            "id": "a7ca7f2193e4bfe8",
+            "id": "805bd8b204ce8878",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -115,23 +100,23 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
-    "id": "c0143a7976ebbe7a",
+    "id": "55de02828c1b8fa0",
     "type": "split",
     "children": [
       {
-        "id": "23f93982c58b88f0",
+        "id": "d93817247eccfc5a",
         "type": "tabs",
         "children": [
           {
-            "id": "0e5541232122b766",
+            "id": "688a9fbc8074e8ef",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Reinforcement Learning/Reinforcement Learning Basic Course.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -141,25 +126,24 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Reinforcement Learning Basic Course"
+              "title": "Backlinks"
             }
           },
           {
-            "id": "afb336b002496d4e",
+            "id": "cca9a5256febd16f",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Reinforcement Learning/Reinforcement Learning Basic Course.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Reinforcement Learning Basic Course"
+              "title": "Outgoing links"
             }
           },
           {
-            "id": "d3009e9e32c4ddb3",
+            "id": "25b8c4582f43d26f",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -174,32 +158,34 @@
             }
           },
           {
-            "id": "7b4d2f99339b94ea",
+            "id": "8514b9dfae84d113",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "ff860a783e41e298",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "Reinforcement Learning/Reinforcement Learning Basic Course.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Reinforcement Learning Basic Course"
-            }
-          },
-          {
-            "id": "510006075a5eb38b",
-            "type": "leaf",
-            "state": {
-              "type": "git-view",
-              "state": {},
-              "icon": "git-pull-request",
-              "title": "Source Control"
+              "title": "Outline"
             }
           }
-        ],
-        "currentTab": 4
+        ]
       }
     ],
     "direction": "horizontal",
@@ -214,34 +200,33 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
+      "bases:Create new base": false,
       "templater-obsidian:Templater": false,
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7b9fa535c852d8e5",
+  "active": "b5350a8449829593",
   "lastOpenFiles": [
-    "Reinforcement Learning/images2/Screenshot 2026-01-30 alle 16.19.08.png",
-    "README.md",
+    "XAI/images/Screenshot 2026-02-10 alle 17.18.02.png",
+    "XAI/images/Screenshot 2026-02-10 alle 15.39.09.png",
+    "XAI/images/Screenshot 2026-02-02 alle 14.20.12.png",
+    "XAI/images/Screenshot 2026-02-02 alle 14.02.38.png",
+    "XAI/images/Screenshot 2026-01-30 alle 18.46.56.png",
+    "XAI/images/Pasted image 20260210152843.png",
+    "XAI/images/Screenshot 2026-02-11 alle 14.36.15.png",
+    "XAI/images/Screenshot 2026-02-10 alle 15.35.44.png",
+    "XAI/images/Screenshot 2026-02-12 alle 11.33.52.png",
+    "XAI/images/Screenshot 2026-02-10 alle 16.16.25.png",
+    "XAI/images/Screenshot 2026-02-10 alle 15.46.20.png",
+    "XAI/images",
+    "XAI/cartella senza nome",
+    "XAI/Guide to Explainable AI.md",
+    "Reinforcement Learning/Papers on Deep Reinforcement Learning.md",
     "Reinforcement Learning/Reinforcement Learning Basic Course.md",
-    "Screenshot 2026-01-30 alle 16.19.08.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-30 alle 14.15.07.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-30 alle 12.18.42.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-29 alle 14.15.51.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-29 alle 14.15.22.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-29 alle 13.54.41.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-29 alle 11.29.32.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-29 alle 11.18.54.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-28 alle 17.13.01.png",
-    "Reinforcement Learning/images2/Screenshot 2026-01-28 alle 17.12.19.png",
-    "Templates/TOC.md",
-    "2026-01-25.md",
-    "Untitled.canvas",
-    "Reinforcement Learning/images2",
-    "TOC Example.md",
-    "Untitled.md",
-    "Templates",
-    "Reinforcement Learning/images",
-    "Reinforcement Learning/🤖 1 Reinforcement Learning - Basic Course",
-    "Reinforcement Learning"
+    "XAI/Algorithms/CounterfactualsForRL.py",
+    "XAI/Algorithms/TimeSHAP.py",
+    "XAI/Algorithms/ICE_Plots.py",
+    "XAI/Algorithms/PDPs.py",
+    "README.md"
   ]
 }
