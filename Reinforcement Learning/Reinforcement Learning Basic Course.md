@@ -931,14 +931,12 @@ $$
 
   
 
-I**t tells how good is to take a particular action when we are in a particular state**
-
-  
+**It tells how good is to take a particular action when we are in a particular state**
 
 ![image.png](images/bc438ac7-f38e-451e-a0ba-aac8cafb2f89.png)
 
   
-
+We can derive one from the other just by analuyzing the bellman expectation equaton.
 ### Bellman Expectation Equation
 
   
@@ -3137,7 +3135,8 @@ You propagate the importance of each step backwards and you need a lot of episod
 
 While we are following a behaviour policy $\mu(a|s)$ we want to evaluate a target policy $\pi(a|s)$ to compute $v_\pi(s)$ or $q_\pi(s,a)$.
 
-  
+The key insight is that the agent is learning about one policy while behaving according to a different one: the data we are collecting is *off*
+  from the policy we are actually trying to optimize.
 
 Reasons behind that:
 
@@ -3148,6 +3147,7 @@ Reasons behind that:
 - We want to re-use experience generated from old policies.
 
 - We want to learn about optimal policy while following exploratory policy
+	- The policy generates experience and the agent learns from that experience ( not from the policy itself directly )
 
 - We want to learn about multiple policies while following one policy
 
