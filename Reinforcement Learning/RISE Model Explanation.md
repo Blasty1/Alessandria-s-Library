@@ -343,6 +343,7 @@ Here a brief description of each parameter:
 	- In PPO, the Episode and the NN Update (Rollout) are two completely separate timelines that do not have to align.
 	![[Screenshot 2026-03-09 at 10.39.02.png]]
 - batch_size $\rightarrow$ PPO batch size: once the environments have collected all their steps into a giant memory buffer, the algorithm slices that data into mini-batches of this size to feed through the GPU.
+	- This is strictly the amount of data (steps) the agent collects before it pauses to update its brain.
 - n_loks $\rightarrow$ number of locomotives available in the simulation
 - enable_maintenance $\rightarrow$ When activated, it enforces km-based maintenance, specifically a 12,000 km threshold, 1,500 km per trip, and a 6-hour workshop downtime.
 I found a bug due the usage of a wrong parameter: the actual buffer dimension of data was not computed correctly.
@@ -353,6 +354,8 @@ I changed the number of scheduled days to 5:
 
 There was a bug in my project: a mismatch between the representation in the dict of the observation space and how it was handled in my other functions. I resolved the issue.
 **See Trial 20**
+**See Trial 21**
+**See Trial 22**
 We did it, it is working: the agent chooses also 3 locomotives and it allows better performance than the random baseline.
 The RL model demonstrates strong generalization on the 500 unseen scenarios, showing substantial improvements across all key metrics:
 - Reward: The RL Agent achieved a mean reward of 86.29, a +30.75 improvement over the baseline (55.54).
@@ -362,3 +365,187 @@ The RL model demonstrates strong generalization on the 500 unseen scenarios, sho
 The tree's logic is almost entirely driven by **availability masks**. This confirms that the agent's primary priority is identifying which locomotives are physically capable of being dispatched (i.e., not in maintenance and not busy).
 
 I found a bug: the bug is a critical sequence error in our reinforcement learning environment where the `step` function applies automatic locomotive maintenance immediately before executing the agent's chosen action, violating the Markov Decision Process by allowing the environment to secretly change the state the agent just observed. Because the agent receives an observation that a locomotive is available and outputs an action to use it, but the environment instantly locks that locomotive into maintenance if it crossed the distance threshold, the agent's valid action suddenly fails during the dispatch phase, arbitrarily penalizing the model for a correct choice and destroying the training loop. To completely fix this observation-action misalignment, we must execute the agent's dispatch logic first, advance the simulation clock to the next event, and only then apply environment-driven state changes like scheduled maintenance right before generating the next observation, ensuring the agent's actions always perfectly align with the reality it was shown.
+**Trial 23**
+Performance are quite similar to before.
+
+I need to implement random breaks of the locomotives to understand how the agent is reliable in this types of events ( which are very common in a normal lifecycle with trains ). My idea was:
+- Implement it statically ( in the reset method ) without considering locomotives usage/health
+- Implement it dynamically ( in the step method ) by considering external factor which can change.
+We can ignore the breaks during the traveling for now ( In reality, they almost never break down completely, but get a speed restriction instead , even that case is fairly rare (and when it happens, they may sometimes stop it early) ). It's more common that they encounter a small problem, but they can continue to the destination.
+
+How do i want to implement it?
+- A predetermined budget of unexpected maintenance events (random breaks) is defined at the start of each episode.
+	- We are not allowing for multiple breaks at the same time / timestamp.
+- During the execution of the environment's `step` function, the system checks if the remaining count of random breaks is greater than zero. When a break is triggered, the environment evaluates the current health state of the entire active fleet.
+	- Rather than selecting a locomotive uniformly at random, the system samples the target locomotive using a Weibull distribution weighted by the real-time degradation of each asset. Consequently, locomotives that have been heavily utilized without planned maintenance carry a mathematically higher probability of failure.
+	- For Weibull distribution i chose $\beta$ ( the exponent which is called the shape parameter ) equal to 2.5. The value of beta dictates exactly _how_ a machine ages, mapping to a famous concept in engineering called the Bathtub Curve.
+		- **β < 1 (Infant Mortality):** The failure rate _decreases_ over time. This models manufacturing defects. If a locomotive survives its first few days on the track, it will likely run fine for years.
+		- **β = 1 (Random/Constant Failure):** The failure rate is completely flat regardless of age. An old locomotive and a brand-new one have the exact same chance of breaking down. This models external shocks (like a tree falling on the tracks), but it **destroys** your DRL agent's incentive to do maintenance.
+		- **β > 1 (Wear-Out Phase):** The failure rate _increases_ as time/distance accumulates. This models physical wear and tear on gears, engines, and brakes.
+	- When beta is strictly between `2.0` and `3.0`, it models a **rapidly increasing, non-linear wear-out rate**, which is typical for mechanical components like locomotive engines.
+- The selected locomotive is automatically routed into unexpected maintenance, incurring the associated operational penalties, and the total count of remaining random breaks is decremented by one.
+Everything work correctly with our event system ( i added a process abstract method which has to be implemented and for some events it means to carry out some important operations ).
+
+**See Trial 24**
+
+I found a bug in the code so i changed it and not it seems to work better. I also changed the architecture of the random breaks: 
+- Our current approach pre-schedules a fixed number of `BreakEvent`s at random timestamps during `reset()`, choosing hours uniformly at random without replacement from the valid time window. When a `BreakEvent` fires, `sendRandomLocomotiveToMaintenance()` is called, which looks at all currently available (non-busy) locomotives, computes a weight for each one proportional to `distance_since_last_maintenance ** weibull_beta`, normalizes those weights into probabilities, and samples one victim via `np.random.choice`. If no locomotives are available at that moment, it reschedules the break to the time when at least 1/3 of the fleet has returned, then retries. The selected locomotive is then sent to maintenance via `sendLocomotiveToMaintenance()` with `is_random=True`.
+
+**Pros**
+
+The timing of breaks is truly random and spread across the full schedule window, so you avoid front-loading. The Weibull-weighted sampling naturally biases toward worn locomotives — a fresh locomotive has near-zero probability of being selected while a heavily worn one dominates. The reschedule-on-no-availability logic is a nice safety net that prevents breaks from firing into a void. The `is_random` flag lets downstream logic distinguish random breaks from scheduled maintenance.
+
+**Cons**
+
+The number of breaks is fixed at reset time (`random_breaks_count`), so the break rate has no relationship to what actually happens during the episode — if locomotives happen to accumulate a lot of km early, the break count doesn't increase to reflect that. The break times are sampled uniformly, meaning a locomotive that is nearly fresh at the scheduled break time can still be selected (just with low probability), so the _when_ and the _who_ are decoupled. The rescheduling logic waits for 1/3 of the fleet but doesn't re-evaluate the Weibull weights at the new time, so the victim selection reflects availability at the rescheduled moment but the timing was chosen arbitrarily. There is no periodic check — breaks only fire at pre-committed timestamps, so if a locomotive accumulates extreme wear between two break events it will never trigger an unscheduled failure. Finally, `random_breaks_count` is a hard integer tuned by hand with no principled connection to `MAINTENANCE_KM_MAX`, fleet size, or trip distances, making it brittle across different schedule configurations.
+
+**See Trial 25**
+Next step is to implement exactly the ability of early maintenance for the agent, here i have found several architecturs for that:
+1. The "Pure" Dual-Head (Full Autonomy)
+The agent outputs N dispatch weights and N maintenance weights, plus the 2 dispatch selectors.
+- **Logic:** The agent independently decides the "Fitness for Duty" and "Urgency for Repair" for every single locomotive.
+- **Pros:** This is the most "pure" RL approach; the agent can learn complex strategies, like keeping a "sick" locomotive active because it's the only one at a critical station.
+- **Cons:** It doubles the locomotive action space, which can lead to longer training times and "Value Loss" spikes if the rewards for maintenance aren't perfectly shaped.
+2. Inverse Weight Selection
+The agent uses one weight per locomotive. Low weights are interpreted as maintenance requests.
+- **Logic:** If a weight is below −0.8, the environment attempts to send that specific locomotive to maintenance.
+- **Pros:** No changes to the Neural Network architecture; uses the existing "Decision Spread" you observed in Trial 14.
+- **Cons:** It creates "Action Entanglement." The agent cannot express "I want this locomotive to stay idle but NOT go to maintenance" without carefully balancing the weight in a narrow middle range.
+3. The "Maintenance Budget" (Quantity Heuristic)
+The agent uses a selector to decide _how many_ locomotives to fix, and the environment picks the ones with the lowest health.
+- **Logic:** The agent provides a number (K); the environment sorts the idle fleet by distance and picks the top K.
+- **Pros:** Prevents "Maintenance Spikes" and locomotive shortages (_lokbrist_). It simplifies the agent's job to high-level fleet management.
+- **Cons:** The agent cannot choose to fix a "medium-health" locomotive that is currently idle to prepare for a busy future window.
+4. The Global "Health Threshold" Action
+The agent outputs a single continuous value representing the "Minimum Health Policy" for the fleet
+- **Logic:** Remap the action to a km value (e.g., 10,000 km). The environment automatically services any idle locomotive exceeding that distance.
+- **Pros:** Very easy to learn (only 1 additional action dimension). It mimics how real railway managers set maintenance policies.
+- **Cons:** It is a "blunt instrument." The agent cannot make surgical decisions for individual locomotives at different stations.
+5. Maintenance as a "Virtual Station"
+The environment treats the workshop as a "Station C" with a permanent "Maintenance Train" demand.
+- **Logic:** The agent "dispatches" locomotives to the workshop using the same weight-based logic it uses for Stations A and B.
+- **Pros:** Totally integrates maintenance into the existing "Skill" the agent is already learning: assigning locomotives to tasks.
+- **Cons:** You must carefully balance the `START_BONUS` and `ON_TIME_BONUS` for maintenance vs. real trains to avoid the agent "servicing the fleet to death" to collect easy rewards.
+6. The Priority "Selector" Mask
+The agent outputs maintenance weights, but the environment only processes them _after_ all dispatching is done.
+- **Logic:** Dispatch has lexicographical priority. Any locomotives not picked for a train are then checked against the agent's maintenance weights.
+- **Pros:** Guarantees that maintenance never causes a train to be canceled or delayed (no shortage).
+- **Cons:** The agent might never get to perform maintenance during a 5-day busy period, leading to the "Catastrophic Failure" seen in Trial 12 when all locomotives hit their hard limits at once.
+
+Quick comparison:
+
+|**Method**|**Agent Autonomy**|**System Stability**|**NN Complexity**|
+|---|---|---|---|
+|**Dual-Head**|High|Low|High|
+|**Inverse**|Medium|Medium|Low|
+|**Budget (Heuristic)**|Low|**High**|Low|
+|**Virtual Station**|**High**|Medium|Medium|
+
+The inverse weight selection strategy seems to be the best approach.
+Here a fast description of what i want to implement:
+The core of my architecture is an extension of our Trial 22 breakthrough where the agent uses a Shared-Weight MLP to rank locomotives and a Selector MLP to decide the quantity of actions. In this specular inverse approach, the action space is expanded to $N + 4$ elements, consisting of $N$ continuous dispatch weights and 4 station-level selectors. The Selector MLP is modified to output four values: two for dispatching (choosing 0, 2, or 3 locomotives) and two new maintenance selectors that decide the quantity of locomotives to proactively service at each station. During the environment `step()`, the logic is split into two distinct phases to ensure operational safety: first, the maintenance selectors are checked, and if a station is designated for service, the environment identifies the idle locomotive at that station with the **lowest** dispatch weight—representing the machine the agent has deemed least "fit" for current travel—and triggers `sendLocomotiveToMaintenance()`. This phase effectively removes "low-fitness" or high-mileage assets from the available pool before the dispatching phase begins, where the agent then uses the remaining idle locomotives and the dispatch selectors to fulfill train schedules. This architecture is ideal for PPO because it decouples the strategic "budgeting" decision (how many to fix) from the "identity" decision (which one to fix), preventing noisy Gaussian sampling from accidentally triggering maintenance during a critical dispatch window. By reusing the existing ranking weights in an inverse fashion, the agent does not need to learn a redundant secondary set of maintenance weights, which keeps entropy manageable and stabilizes the training process against the policy collapse seen in earlier trials. Finally, this setup provides a clean gradient signal for proactive fleet management, as the agent is rewarded for reducing global lateness by fixing "bottom-ranked" locomotives during quiet periods, thus preventing the catastrophic maintenance spikes that occur when multiple assets hit their 12,000 km hard limit simultaneously.
+
+
+
+
+**See Trial 26**
+I achieved a comparable result with the early maintenance, the problem here is that it is not enough: it should be slightly better or at least equal. It seems that the value loss function is quite constant over training. 
+I saw the architecture behind the scene, the NN is too simple for that: our Critic gets none of that smart logic. It just gets a raw, flattened, 1D array of numbers. It has no idea what a "locomotive" is, it doesn't know what "minimum health" is, and it has to figure out all of those complex relationships from scratch using a basic, generic multi-layer perceptron.
+
+**Because the Critic can't truly understand the state, it can't accurately predict  the `state_value`, which means it can't give the Actor good feedback.**
+We need to build a Critic that is just as smart as your Actor. We will create a new class that parses the observation the exact same way the Actor does, computes the same health statistics, but instead of outputting actions, it outputs a single value prediction.
+
+
+I got good results by increasing the number of episodes of the training, i started from 20k episodes to 60k episodes.
+
+**See Trial 27,28,29,30,31,32,33,34**
+
+I got the best result with trial 33 where i increased the win rate to 96.8% , which is the best performance achieved until now. It required 50k episodes.
+
+I changed the code for the plotting in order to consider random breaks, forced maintenance ( the threshold has been reached ) and normal maintenance ( the agent choose to send to maintenance ). 
+To support all three maintenance types alongside standard breakdowns, I introduced a new `_FORCED_MAINTENANCE_STATION` constant and grouped all maintenance states into a shared tuple (`_ALL_MAINTENANCE_STATIONS`) to cleanly manage their logic.
+
+I also updated `_activity_station_code()`, the interval extraction logic, and the plotting function to assign distinct colors and hatch patterns for:
+
+1. **Normal Maintenance** (Yellow, `///` hatch)
+    
+2. **Forced Maintenance** (Orange, `//` hatch)
+    
+3. **Random Breaks / Random Maintenance** (Red, `\\` hatch)
+
+
+I changed one more time the random architecture, right now we just sample Y times in the episode where random failures will happen. The problem with this strategy is that we are decoupling **when** from **who**: a locomotive can have 100% health and can break because it is the unique option.
+I moved to **Continuous Hazard Model**: Breakdowns are no longer pre-scheduled events; they are real-time, probabilistic state transitions. Every hour a locomotive operates, it exposes itself to a "hazard rate." The harder you push the machine, the higher the risk.
+
+*How does it work?*
+1. The Filter (Is it allowed to break?)
+Before any math happens, the system checks if a breakdown is currently valid. It ensures that the simulation is within the "Danger Window" (the middle of the schedule, preventing unfair breaks at the very beginning or end) and that the locomotive is actually sitting idle at the station, not currently out driving a train.
+2. The Base Rate (How fragile is the locomotive?)
+If a locomotive is eligible to break, the system looks at its **wear ratio** (how many kilometers it has driven since its last maintenance). Using a Weibull distribution, it calculates an `hourly_hazard` rate. This means a brand-new locomotive has a near-zero base failure rate, while one nearing its 12,000 km limit has a sharply increasing failure rate.
+3. The Time Scale (How long was it sitting there?)
+This is the core of the continuous implementation. Because the environment skips empty time between events (e.g., jumping forward 3.5 hours until the next train departs), the system looks at that exact Δt (time elapsed). It scales the hourly failure rate exponentially against that specific time gap. Idling for 5 minutes yields a tiny probability of breaking; idling for 5 hours drastically increases it.
+4. The Dice Roll (Execution)
+Finally, the system takes that exact, time-scaled probability and rolls a random number. If the roll falls within the probability threshold, the locomotive instantly breaks down, is sent to forced maintenance, and the total pool of allowed random breaks is reduced by one.
+
+BASE_HOURLY_FAILURE_RATE = 0.1 # 10% max chance per hour at 100% wear
+WEIBULL_BETA = 2.5 # Wear-out curve shape
+
+**See Trial 35, 36**
+
+I tried with 3 and 5 random breaks as limit for an episode but i saw that the agent was able to reach a very close result to what we have seen before, it just lost small percentage in terms of winning rate and he had a few decrease in terms of latency saved and an increase of the relative variance.
+
+I did new trials by increasing these 2 parameters:
+
+BASE_HOURLY_FAILURE_RATE = 0.12 # 10% max chance per hour at 100% wear
+WEIBULL_BETA = 2 # Wear-out curve shape
+
+In order to have much more random breaks in average.
+
+**See Trial 37**
+
+
+Oskar implemented a more advanced baseline to use in order to understand how good is our agent.
+
+
+**Explaniability**
+We want to introduce a new way to expose results for stakeholders. We want to build a combination of charts as close as to the tools that GreenCargo uses to manage its resources.
+![[Pasted image 20260421113842.png|697]]
+
+Short description of this interface that we want to emulate:
+The screen is split into three distinct horizontal zones, each providing a different layer of data:
+1. **Locactivity** (Top Chart) - **Train granular view**
+This tracks the broad activity of locomotive groups (e.g., series 9124, 9114) 
+In professional dispatching software like Plata, those "doubled" bars (the two rows per line) usually represent Planned vs. Actual (or Forecasted) data.
+- Green Blocks: Represent active, scheduled assignments or successful train runs.
+- "Red Block" Crisis: When a dispatcher sees a red block here, it’s a severe warning. It means, "We have a train scheduled to depart, but we mathematically do not have enough locomotives of this specific class available in that region to pull it."
+	- The Fix: A red block here forces the dispatcher to act. They must either cancel the train, delay it, or manually override the system to borrow a locomotive from a different series (which might require a different driver certification or have different speed limits).
+2. **Loc shift allocation** (Middle Chart) 
+This is where abstract schedules become real-world logistics. A locomotive cannot move without a designated shift, a crew, and a path.
+- The Train Icons: Notice how some green blocks have little train icons and others don't. A block with a train icon means the locomotive is actively hauling freight or passengers. A block _without_ an icon likely represents "Light Engine" movement—when a locomotive is driving itself to a new location just to be repositioned for its next actual job.
+- Reading the "Whitespace": For a dispatcher, the white gaps between the green blocks are just as important as the blocks themselves. These gaps are turnaround times, crew changes, or buffer periods. If a dispatcher sees two green blocks packed too tightly together with almost no white space, they know that schedule is incredibly fragile; a 10-minute delay on the first job will immediately ruin the second job.
+3. **Loc allocation** (Bottom Chart) - **Locomotive granular view**
+This is the most granular view, tracking specific physical assets (e.g., `4017.MB1E`, `1274.RC4R`).
+- Blue bars: Often represent a locomotive being "stationed" or assigned to a long-term route.
+- Orange/Yellow: These usually indicate warnings or "soft" allocations that might change.
+- Logbook entries: Note the text like _"UTRUSTAD MED TÅGVÄRME"_ (Equipped with train heating), which gives dispatchers critical technical info about what that specific engine can do.
+
+While this is our output interface:
+![[Screenshot 2026-04-21 at 12.17.12.png]]
+Key Difference in output:
+
+| **Feature**     | **Your RL Gantt Chart**                                                              | **Plata Interface**                                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Logic**       | **Separated:** Trains and Locos are in two distinct blocks (T-rows and L-rows).      | **Integrated:** The views are stacked so you can visually "drop" a locomotive from the bottom chart into a shift in the middle chart. |
+| **Purpose**     | **Evaluation:** To show a "Reward" or "Lateness" score (the result of an algorithm). | **Action:** To allow a human to click a bar and move it (the tool for a human).                                                       |
+| **Data Source** | **Synthetic:** Usually starts at "Hour 0" to "Hour 140".                             | **Real-world:** Anchored to the actual calendar (March 17th, etc.).                                                                   |
+
+What should we improve in our interface?
+- Locomotive Section
+	- Use >> and next station
+	- Specify in which workshop the locomotive is going to stay
+- Train section
+	- Consolidating each train into a single row that pairs the planned schedule with the actual execution, making it obvious where the model drifted from the timetable. 
+	- By limiting the labels strictly to the duration in hours and the directional route like **A → B**, we allow the geometry of the bars to communicate the most important information—time and displacement.
+- Changed the X axis 
+
+**See Trial 38 - 39 **

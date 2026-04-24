@@ -16,11 +16,23 @@
               "state": {
                 "file": "Reinforcement Learning/RISE Model Explanation.md",
                 "mode": "source",
-                "source": true
+                "source": false
               },
               "pinned": true,
               "icon": "lucide-file",
               "title": "RISE Model Explanation"
+            }
+          },
+          {
+            "id": "96afa3680fa43278",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Pasted image 20260330050505.png"
+              },
+              "icon": "lucide-image",
+              "title": "Pasted image 20260330050505"
             }
           },
           {
@@ -55,18 +67,30 @@
             "id": "7498e53bfbad87c9",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "Reinforcement Learning/Reinforcement Learning Basic Course.md",
-                "mode": "source",
-                "source": true
+                "file": "Pasted image 20260421113842.png"
               },
-              "icon": "lucide-file",
-              "title": "Reinforcement Learning Basic Course"
+              "icon": "lucide-image",
+              "title": "Pasted image 20260421113842"
             }
           },
           {
             "id": "503abe7c947d62e5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "2026-03-18.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2026-03-18"
+            }
+          },
+          {
+            "id": "3d1f381ece8038a5",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -80,7 +104,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 6
       }
     ],
     "direction": "vertical"
@@ -255,24 +279,29 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "503abe7c947d62e5",
+  "active": "3d1f381ece8038a5",
   "lastOpenFiles": [
+    "Reinforcement Learning/RISE for Clients.md",
     "Reinforcement Learning/Reinforcement Learning Basic Course.md",
     "Reinforcement Learning/RISE Model Explanation.md",
-    "Screenshot 2026-03-09 at 10.39.02.png",
     "Reinforcement Learning/Papers on Deep Reinforcement Learning.md",
     "Reinforcement Learning/learning_curve.png",
+    "Blockchain/Blockchain.md",
+    "Screenshot 2026-04-22 at 11.35.43.png",
+    "Screenshot 2026-04-22 at 11.25.18.png",
+    "Screenshot 2026-04-22 at 11.19.57.png",
+    "Screenshot 2026-04-22 at 11.09.11.png",
+    "Screenshot 2026-04-22 at 10.55.33.png",
+    "Screenshot 2026-04-22 at 10.44.58.png",
+    "Screenshot 2026-04-22 at 10.42.05.png",
+    "Screenshot 2026-04-22 at 10.40.13.png",
+    "Blockchain",
+    "Screenshot 2026-04-21 at 12.17.12.png",
+    "T.md",
+    "2026-03-18.md",
     "XAI/Guide to Explainable AI.md",
     "README.md",
     "Templates/TOC.md",
-    "XAI/images/Screenshot 2026-02-10 alle 17.18.02.png",
-    "XAI/images/Screenshot 2026-02-10 alle 15.39.09.png",
-    "XAI/images/Screenshot 2026-02-02 alle 14.20.12.png",
-    "XAI/images/Screenshot 2026-02-02 alle 14.02.38.png",
-    "XAI/images/Screenshot 2026-01-30 alle 18.46.56.png",
-    "XAI/images/Pasted image 20260210152843.png",
-    "XAI/images/Screenshot 2026-02-11 alle 14.36.15.png",
-    "XAI/images/Screenshot 2026-02-10 alle 15.35.44.png",
     "XAI/images",
     "XAI/cartella senza nome",
     "XAI/Algorithms/CounterfactualsForRL.py",
