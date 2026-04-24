@@ -85,7 +85,7 @@ There are two rewards:
 It aims to reduce the number of rolling stocks used and to improve the rolling stock utilization rate.
 It is the sum of 5 items, formulated as:
 $$
-r' = - \alpha'_1 r_a - \alpha'_2 r_n - \alpha'_4 r_w + \alpha'_4 r_v + - \alpha'_5 r_o
+r' = - \alpha'_1 r_a - \alpha'_2 r_n - \alpha'_4 r_w + \alpha'_4 r_v + \alpha'_5 r_o
  $$
  where:
  - $\alpha'_1 ,\alpha'_2, \alpha'_3, \alpha'_4, \alpha'_5$ are binary indicators ( 1 or 0 if the corresponding situation occurs )
@@ -142,3 +142,16 @@ $$
 $\mu^t$ is the categorical distribution obtained by applying the categorical distribution function  $\Psi$ to our set of probabilities $\tau$ at time $t$.
 $\phi$ is the random sampling function: in other words it samples an action from the categorical distribution defined with our probabilities.
 
+
+
+# Designing Rewards for Fast Learning
+
+Link:https://arxiv.org/pdf/2205.15400
+Date: 30 May 2022
+
+Firstly, we advocate choosing state-based rewards that maximize the action gap, making optimal actions easy to distinguish from suboptimal ones. Secondly, we propose minimizing a measure of the horizon, something we call the “subjective discount”, over which rewards need to be optimized to encourage agents to make optimal decisions with less lookahead. To solve this optimization problem, we propose a linear-programming based algorithm that efficiently finds a reward function that maximizes action gap and minimizes subjective discount
+
+Our experiments support three principles of reward design:
+1) consistent with existing results, penalizing each step taken induces faster learning than rewarding the goal.
+2) When rewarding subgoals along the target trajectory, rewards should gradually increase as the goal gets closer.
+3) Dense reward that’s nonzero on every state is only good if designed carefully.
