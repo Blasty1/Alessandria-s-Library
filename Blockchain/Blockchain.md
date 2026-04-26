@@ -70,7 +70,7 @@ By changing the Nonce we can vary the hash of the block![[Screenshot 2026-04-24 
 ![[Screenshot 2026-04-24 alle 15.39.41.png|288]]
 We can see the avalanche effect in action.
 
-The blockchain establishes a target ( a specific hash, target is expressed by leading 0 ), the hashes higher did not count and they can not be accepted in the blockchain.
+The blockchain establishes a target ( a specific hash, target is expressed by leading 0, more leading zero leads to a more difficult problem to solve ), the hashes higher did not count and they can not be accepted in the blockchain.
 ![[Screenshot 2026-04-24 alle 15.48.37.png]]
 The miners vary the nonce In order to have the hash below the target and the block can be accepted by the blockchain.
 The avalanche effect avoids cheating ( the system is completely unpredictable ).
@@ -113,7 +113,28 @@ The orange chain has much more hash computation power ( assuming each node has t
 ![[Screenshot 2026-04-24 alle 17.15.21.png|443]]
 The blocks aside are called orphaned blocks and their miners have received their reward which is in the block outside the blockchain ( reward is not payment in cash but it is the special space to add a transaction ): the reward is not valid anymore.
 
+# Cryptocurrency
+Each cryptocurrency is defined by 3 aspects:
+1. Technology $\rightarrow$ blockchain
+2. Protocol/Coin $\rightarrow$ a set of rules for participants of the bitcoin network.
+	1. Each protocol has its own coin (e.g. bitcoin has its coin called bitcoin, same for ethereum )
+	2. The coin is the native asset of that specific blockchain. It is usually used to pay for the "work" done by the network (transaction fees or mining rewards).
+3. Tokens $\rightarrow$ they rely on smart contracts which are builts on top of protocols..
+	1. Bitcoins has not token because it does not allow for smart contracts
+	2. Tokens are like "guest" currencies. They don’t have their own blockchain; instead, they live inside another protocol's ecosystem using **Smart Contracts**
+![[Screenshot 2026-04-26 alle 19.09.57.png|389]]
+
+*Bitcoin's Monetary Policy*
+The monetary policy of bitcoin is entirely controlled by software: no one can change it.
+It consist into two parts:
+1. The Halving $\rightarrow$ the number of bitcoins per block released is halved every single 4 years
+![[Screenshot 2026-04-26 alle 19.20.13.png|377]]
+ ![[Screenshot 2026-04-26 alle 19.24.26.png]]
+2. Block Frequency $\rightarrow$ how often the blocks come in 
+	1. Bitcoin is programmed to add a new block to the chain approximately every **10 minutes**.
+	2. This is managed by the **Difficulty Adjustment**. As more miners join (increasing total computing power), the "puzzle" becomes harder to solve. If miners leave, the puzzle becomes easier.
+![[Screenshot 2026-04-26 alle 19.28.27.png|386]]
 
 
 Next episode is:
-20
+36
