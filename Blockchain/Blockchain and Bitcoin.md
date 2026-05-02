@@ -7,8 +7,10 @@ A record/block is composed by:
 3. Hash $\rightarrow$ its fingerprint
 4. Nonce $\rightarrow$ number used only once ( it is a big number )
 	1. We can vary the hash of the block by changing the nonce ( block number and the prev. hash can note be changed )
-![[Screenshot 2026-04-24 alle 15.36.29.png|403]]
-We take the first 4 components ( Block number, Nonce, Data and pointer to the previous hash )and we hash them to produce the fingerprint of the block.
+	2. It is an unsigned 32-bit number which means it has a cap( between 0 and 4 billion = $4 \cdot 10^9$)
+5. Timestamp who gets updated every single second
+![[Screenshot 2026-05-02 alle 12.24.04.png]]
+We take all the components and we hash them to produce the fingerprint of the block.
 ![[Screenshot 2026-04-24 alle 15.37.45.png|404]]
 ![[Screenshot 2026-04-22 at 10.42.05.png|401]]
 
@@ -112,6 +114,7 @@ The orange chain has much more hash computation power ( assuming each node has t
 ![[Screenshot 2026-04-24 alle 17.14.59.png|441]]
 ![[Screenshot 2026-04-24 alle 17.15.21.png|443]]
 The blocks aside are called orphaned blocks and their miners have received their reward which is in the block outside the blockchain ( reward is not payment in cash but it is the special space to add a transaction ): the reward is not valid anymore.
+The reward is given only after 6 confirmation usually ( they don't want to double the payment ).
 
 # Cryptocurrency
 Each cryptocurrency is defined by 3 aspects:
@@ -135,6 +138,108 @@ It consist into two parts:
 	2. This is managed by the **Difficulty Adjustment**. As more miners join (increasing total computing power), the "puzzle" becomes harder to solve. If miners leave, the puzzle becomes easier.
 ![[Screenshot 2026-04-26 alle 19.28.27.png|386]]
 
+*Mining Difficulty*
+Increasing the number of leading zeros means decreasing the pool of correct address for the block. Each time we introduce a new leading 0, we are decreasing the pool by 16 times ( 2^4 , because each digit is represented by 4 bits ).
+The difficulty can be seens as below:
+![[Screenshot 2026-05-02 alle 11.48.43.png|457]]
+The green one is our valid pool while the total pool is orange in the image.
+However the nonce is capped to 4 billion which means the probability is higher that what we have computed:
+![[Screenshot 2026-05-02 alle 12.20.10.png|396]]
+To increase the difficulty we know that each second the timestamp is changed and it forces to solve the hash problem with that data in 1 second otherwise the problem starts again from 0 ( the already tried nonce should be tried again ).
+
+
+Mining Difficulty is computed by
+$$
+\text{Difficulty} = \frac{\text{Current Target}}{\text{Max Target}}
+$$
+In our case:
+![[Screenshot 2026-05-02 alle 11.51.14.png|433]]
+Difficulty is adjusted almost every 2 weeks ( every 2016 blocks, knowing that each block is minted each 10 minute ) through the number of leading zeros.
+
+It says how much harder is to mine a bitcoin now than it was at the beginning.
+The current target is stored in the block meta data in the field called **bits**:
+![[Screenshot 2026-05-02 alle 15.45.51.png|298]]
+We just take the code in bits and we convert it to hexadecimal. 
+We take the first two digits and we convert them to decimal system. We get the number of bytes , if we multiply it per 8 we get the total number of bits which can be divided by 4 to get the total of digits in hexadecimal
+![[Screenshot 2026-05-02 alle 15.59.35.png|408]]
+![[Screenshot 2026-05-02 alle 16.00.19.png|410]]
+
+*Mining Pools*
+A mining pool distributes the work ( challenge/puzzle) for attempting the same problem in order that multiple people do not work at the same time at the same problem without collaboration.
+
+When one of the node of the mining pool finds the solution, the reward is then split about the nodes inside the mining pool weighted on the basis of the computing power introduced in the pool.
+
+*Where do transactions in the data field come from in reality?*
+All the transactions that happens in between the mining of a new block are stored into a **mempool** ( attached to each node ) which is a staging area for transactions.
+![[Screenshot 2026-05-02 alle 12.33.37.png|334]]
+For each transaction we have its fee ( how much the miner is earning ) and its identifier.
+The miner has to include some of this transactions ( of the mempool ) in the data field of the just mined block.
+The miner has to choose which transactions should be included ( each block has a maximum dimension around 1MB in Bitcoin , which is 200k transactions ) and it chooses the transactions with the highest fee ( these fees will be its reward )
+![[Screenshot 2026-05-02 alle 12.37.16.png|390]]
+The hash rate is very high and usually it allows for being faster then 1 second to try the whole 4 billion range of number of the nonce. If at the end of the search no hash has been found , the miner changes the data: it chooses different configuration of the transactions until it finds the hash.
+
+*How do Mempools work?*
+There is one mempools for each node of the blockchain.
+![[Screenshot 2026-05-02 alle 12.56.35.png|423]]
+It is a staging area for transactions.
+Practical example: one person does a transaction and it is added to her mempool. The update is then broadcasted to her neighbours ( closer nodes of the blockchain network ).
+![[Screenshot 2026-05-02 alle 13.00.13.png|400]]
+When a node/miner finds a new block, it already knows in advanced which transactions to add and these are deleted from the mempools ( they are updated ).
+![[Screenshot 2026-05-02 alle 13.02.33.png|413]]
+
+*51% Attack*
+It happens when malicious entities control 51% of the hash rate / power of the blockchain and they start to manipulate transaction histories ( .e.g reversing old transaction and spending again ).
+![[Screenshot 2026-05-02 alle 15.36.18.png]]
+Having much more power , they can double the length of the blockchain and they are controlling it (remember the longest chain wins rule when there is a merge).
+
+# Cryptocurrency Transactions
+A **UTXO** represents a certain amount of cryptocurrency that has been authorized by a sender and is available to be spent by a recipient.
+When someone wants spent money , he wants to make a new transaction. Each transaction requires:
+- Input ( a link to an UTXO )
+	- The UTXO is not an UTXO anymore, it is done ( it is not considered as UTXO anymore )
+- Output ( the owner of the money transferred)
+	- It is allowed to have multiple outputs to a transaction.
+![[Screenshot 2026-05-02 alle 16.17.51.png|414]]
+![[Screenshot 2026-05-02 alle 16.18.38.png|416]]
+
+*Where do transactions fees come from?*
+Any acceptable transaction needs to have a fee ( something that we pay in order that the transaction is inserted into a block ): bigger is the fee , faster it would be inserted into a block.
+The fee is originated from the change of input w.r.t. the output of a transaction.
+![[Screenshot 2026-05-02 alle 16.39.12.png]]
+Here the output sum up to 0.98 and to 0.1, the change represents the fee of the transaction.
+
+*How wallets work?*
+The wallet calculates remaining UTXO ( transaction not already used/linked by another )going through the whole blockchain in order to show us our balance ( how many bitcoins do we have? ).
+![[Screenshot 2026-05-02 alle 16.50.08.png|419]]
+The problem of this image is the privacy: everyone can see people's money and they can also add/remove money of others.
+
+*Signatures*
+When someone starts into cryptocurrency, he gets a private key ( unique identifier ) and then he can generate a public key using the private key ( public keys are available to everyone ).
+The link between private key and public key is not reversable. 
+The private key is used to sign the message ( transaction  in this case ) in order to create a signature which is paired always with the message.
+![[Screenshot 2026-05-02 alle 17.11.46.png|389]]
+The verification function is used to asses the signature by using the public key to confirm or deny that the relative message is signed with the relative private key.
+![[Screenshot 2026-05-02 alle 17.41.26.png|399]]
+The bitcoin address is derived by the public key by applying the sha256 algorithm. It is used for receiving money ( as IBAN we can say but it can not be used to pull money ) so it can be available online.
+We should avoid to expose the public key because if someone is able to find a way of reverse engineering the relation between private and public key then he can get our money.
+
+*What is Segregated Witness ( SegWit )?*
+It is an upgrade of the bitcoin protocol.
+A single transaction is composed by: transactionID  ( unique receipt of the transfer ), sender, receiver, amount of money , the signature and public key ( useful for proof of ownership, they are used for verifying that we own the private key associated with that bitcoin address).
+![[Screenshot 2026-05-02 alle 17.29.27.png|392]]
+The problem with this structure is that signature and public key are long and heavy numbers ( they take 60% of the space dimension of the whole transaction ).
+**SegWit** proposes to remove the **scriptSig** ( signature + public key ) from the transaction inside the block and send it through the network separately in order to save space.
+
+Now we can include a lot of more data but the threshold/maximum size of a block is still 1 Mb.
+
+*Hierarchically deterministic (HD) Wallets*
+From and To in the transactions are replaced with the relative public keys but this allows to establish a flow of money ( privacy can be violated or not totally preserved ).
+With HD Wallets, the owner has a master private key which is used to generate multiple private keys with new relative addresses
+![[Screenshot 2026-05-02 alle 17.51.14.png|384]]
+It enforces privacy or it allows for flow money structuring ( each department of a company has a different private key/ address ).
+There is also a master public key related to its master private key which is used for checking payment or transactions by an auditor ( it can be used as a global public key ).
+
+
 
 Next episode is:
-36
+44-
