@@ -9,7 +9,7 @@
     - [[Reinforcement Learning Basic Course#Value Function|Value Function]]
     - [[Reinforcement Learning Basic Course#Bellman Equation for MRPs|Bellman Equation for MRPs]]
     - [[Reinforcement Learning Basic Course#Markov Decision Process MDP|Markov Decision Process MDP]]
-        - [[Reinforcement Learning Basic Course#Stochastic Policy|Stochastic Policy]]x
+        - [[Reinforcement Learning Basic Course#Stochastic Policy|Stochastic Policy]]
         - [[Reinforcement Learning Basic Course#Value function|Value function]]
         - [[Reinforcement Learning Basic Course#Bellman Expectation Equation|Bellman Expectation Equation]]
         - [[Reinforcement Learning Basic Course#Optimal Value Function|Optimal Value Function]]
@@ -209,34 +209,15 @@ $$
   
 
 We have 3 different definitions of state:
-
-  
-
 1. Environment state $S_t^e$ : information used within the environment to determine what happens next.
-
-2. It is not visible to the agent and it does not give us any relevant information for building up our algorithm
-
-  
-
+	1. It is not visible to the agent and it does not give us any relevant information for building up our algorithm
 ![IMG_49077EBAB63F-1.jpeg](images/IMG_49077EBAB63F-1.jpeg)
-
-  
-
 1. Agent state $S_t^a$ : information that summarize what happens so far used by the agent to pick the next action.
-
-2. It is the information by RL algorithms
-
-3. It can be any function of history $S_t^a = f(H_t)$
-
-  
-
+	1. It is the information by RL algorithms
+	2. It can be any function of history $S_t^a = f(H_t)$
 ![IMG_1569575E4969-1.jpeg](images/IMG_1569575E4969-1.jpeg)
-
-  
-
-1. Information state / Markov State : it contains all useful information from the state ( it is a much more mathematical concept )
-
-2. A state is Markov if it satisfies the **markov property** ( the future is independent of the past given the present )
+2. Information state / Markov State : it contains all useful information from the state ( it is a much more mathematical concept )
+	1. A state is Markov if it satisfies the **markov property** ( the future is independent of the past given the present )
 
   
 
@@ -325,18 +306,11 @@ RL agent may include one or more of these components:
   
 
 1. Policy → how the agent picks its actions , its behaviour function.
-
-  
-
 It is a map from state to action , it can be
-
-  
-
 - Deterministic → $a = \pi(s)$
-
 - Stochastic → $\pi(a|s) = P[A_t=a| S_t = s]$
 
-1. Value function → how good is it to be in a particular state or how much reward i get to perform a specific action
+1.  Value function → how good is it to be in a particular state or how much reward i get to perform a specific action
 
   
 
@@ -411,9 +385,6 @@ Numbers represent immediate reward $R_s^a$ from each state s.
   
 
 We can categorize our RL agents using this 3 components:
-
-  
-
 - It is a **value based** agent if it contains a value function and the policy becomes/is implicit.
 
 - It is a **policy based** agent if we explicitly represent the policy without using the value function.
@@ -423,14 +394,8 @@ We can categorize our RL agents using this 3 components:
   
 
 An RL agent can be
-
-  
-
 - Model Free → we don’t try to explicit understand the environment ( no model )
-
 - Model based
-
-  
 
 ![intro_rl-36.jpg](images/f9fb3246-2ca8-4f81-9f75-e1bf6f74851a.png)
 
@@ -441,15 +406,15 @@ There are 2 problems related to sequential decision making:
 
 1. Reinforcement Learning problem:
 
-2. The environment is initially unknown
+	1. The environment is initially unknown
 
-3. The agent interacts with the environment and it improves its policy
+	2. The agent interacts with the environment and it improves its policy
 
 4. Planning problem
 
-5. A model of the environment is known (e.g. the rules of a game )
+	1. A model of the environment is known (e.g. the rules of a game )
 
-6. The agent does not interact with the external environment but it performs computations with its model improving its policy.
+	2. The agent does not interact with the external environment but it performs computations with its model improving its policy.
 
   
 
@@ -597,58 +562,31 @@ e.g. when i leave the state class 1 i will get always R=-2.
 
 The goal of the Reinforcement Learning is to maximise the return $G_t$ which is the total discounted reward from time-step t
 
-  
-
 $$
 
 G_t = R_{t+1} + \gamma R_{t+1} + . . . = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
 
 $$
-
-  
-
 $R_{t+1}$ is the immediate reward and then we have the future rewards discounted properly: the discount is $\gamma \in [0,1]$ and it tells how much i care now about rewards i’ll get in the future.
-
-  
-
 $\gamma$ is more about *how much you value* future rewards, not necessarily how much you *trust* your predictions:
-
-  
-
 - If $\gamma = 0$ means you're completely myopi ( you only care about the immediate reward $R_{t+1}$) Future rewards literally don't factor into your decision at all. It's not that you don't trust your predictions; you simply don't care about the future.
-
-- Myopic evaluation
-
+	- Myopic evaluation
 - If $\gamma = 1$ means you value a reward 100 steps from now exactly as much as a reward right now. There's no discounting at all—every future reward counts equally.
-
-- Far-sighted evaluation
+	- Far-sighted evaluation
 
   
 
 We are weighting the importance of future reward in our decision.
 
-  
-
 Why Markov reward and decision processes are discounted?
-
-  
-
 - Mathematically convenient ( the sum to $\infty$ will converge )
-
 - Future is uncertain because we do not have a perfect model of the environment
-
 - We can also use undiscounted Marko reward processes ( i.e. $\gamma = 1$ ) if all sequences terminate
 
   
 
 ## Value Function
-
-  
-
 The value function $v(s)$ is the long-term value of being in the state s
-
-  
-
 ![image.png](images/image%2010.png)
 
   
@@ -694,22 +632,15 @@ We take into account only the immediate reward, in other words $v(s) = E[R_{t}]$
   
 
 The value function can be decomposed into two parts:
-
-  
-
 1. Immediate rewards $R_{t+1}$
-
 2. Discounted value of successor state $\gamma v(S_{t+1})$
 
-  
 
 ![image.png](images/image%2015.png)
 
   
 
 Bellman equation is then
-
-  
 
 $$
 
@@ -810,49 +741,27 @@ This is an usable solution only for small MRPs, but for large MRPs we shall use 
   
 
 ## Markov Decision Process MDP
-
-  
-
 It is a Markov reward process MRP with decisions. It is an environment in which all states are Markov.
-
-  
-
 ![image.png](images/6f9b9e95-6ad2-4bb8-bc74-d2813282dd04.png)
-
-  
 
 The reward function now depends both on the state and on which type of action we take.
 
-  
 
 We just need to consider actions: the transition probability matrix depends on which action we take; in a discrete context, we have a different state transition probability for each action $a$.
 
   
 
 ![image.png](images/image%2020.png)
-
-  
-
 The decisions are the red strings on the arcs
-
-  
-
 ### Stochastic Policy
-
-  
-
 A policy $\pi$ is a distribution over actions given states
 
-  
 
 $$
 
 \pi(a|s) = P[A_t = a | S_t = s]
 
 $$
-
-  
-
 In other words: if you are in some state s, the distribution gives us the mapping of the probability of a specific action ( if i am here, which is the probability of going right? Or left? )
 
   
@@ -877,59 +786,40 @@ Given an MDP $M = <S, A, P, R, \gamma>$ with policy $\pi$, we can always recover
 
 - Markov Process from it
 
-- The state sequence $S_1 , S_2 , . . .$ is a MP
+	- The state sequence $S_1 , S_2 , . . .$ is a MP
 
 - Markov Reward Process from it
 
-- The state and reward sequence $S_1, R_2, S_2 , . . .$ is a MRP $<S, P^\pi , R^\pi , \gamma >$
+	- The state and reward sequence $S_1, R_2, S_2 , . . .$ is a MRP $<S, P^\pi , R^\pi , \gamma >$
 
-- $P^\pi_{ss'} = \sum_{a\in A} \pi(a|s) P^a_{ss'}$
+	- $P^\pi_{ss'} = \sum_{a\in A} \pi(a|s) P^a_{ss'}$
 
-- $R^\pi_{ss'} = \sum_{a\in A} \pi(a|s) R^a_{ss'}$
+	- $R^\pi_{ss'} = \sum_{a\in A} \pi(a|s) R^a_{ss'}$
 
-- We are just averaging over all the policy values.
+	- We are just averaging over all the policy values.
 
   
 
 ### Value function
-
-  
-
 We define two types of value functions:
 
-  
-
 The **state-value** function $v_\pi(s)$ of an MDP is the expected return starting from state s and then following policy $\pi$
-
-  
-
 $$
 
 v_\pi(s) = E_\pi[G_t| S_t=s]
 
 $$
-
-  
-
 There is no one expectation anymore but there are different ones depending on how i behave.
-
-  
-
 The value function must be subscribed to a specified policy, in other words **it expresses how good is to be in particular state s if i’m following the $\pi$ policy.**
 
-  
 
 The **action-value** function $q_\pi(s,a)$ of an MDP is the expected return starting from state s, taking action a, and then following policy $\pi$
-
-  
 
 $$
 
 q_\pi(s,a) = E_\pi[G_t | S_t=s, A_t=a]
 
 $$
-
-  
 
 **It tells how good is to take a particular action when we are in a particular state**
 
@@ -938,89 +828,39 @@ $$
   
 We can derive one from the other just by analuyzing the bellman expectation equaton.
 ### Bellman Expectation Equation
-
-  
-
 The value function can be decomposed into an immediate reward plus discounted value of successor state.
 
-  
-
 This approach can be used for both:
-
-  
-
 - State-value function
-
-  
-
 ![image.png](images/08d1d769-fbe9-416b-9bff-9d448a65d952.png)
-
-  
-
 ![image.png](images/image%2021.png)
-
-  
-
 We are averaging on the actions we might take.
-
-  
-
-Open circle represents state meanwhile filled circles are for actions
-
-  
+In the diagram:
+- **White Circle (s):** Represents the current state.
+- **Black Dots (a):** Represent the possible actions the agent can take from that state.
+- **The "Flow":** To find the value of the white circle, you look at all the black dots (actions) you might take and average their values based on how likely you are to choose them.
 
 - Action-value function
-
-  
-
 ![image.png](images/image%2022.png)
-
-  
-
 ![image.png](images/image%2023.png)
-
-  
 
 We start off by taking some actions , we are considering a specific action as the root of the tree and we are averaging by the successor states.
 
-  
 
 We can now stitch together the two previous concepts:
-
-  
-
 - Bellman Expectation Equation for $v_\pi(s)$
-
-  
-
 ![image.png](images/image%2024.png)
-
-  
-
 At the root of the tree we got the value function for a particular state V which tells us how good is it to be in a particular state and the way we are going to understand it is to use a two-step look ahead: we consider all the actions we might take next and how good is it to be in the successor states we can end after the action.
-
-  
-
 The idea behind the math is: the value function at the current time step is equal to the immediate reward plus the value function of where you end up.
 
   
 
 - Bellman Expectation Equation for $q_\pi(s,a)$
-
-  
-
 ![image.png](images/image%2025.png)
-
-  
-
 Starting from a particular state and action , i can consider the next state i can end and then the possible actions i can take from them. I can average everything like in the previous case.
 
-  
 
 **Example**: Bellman expectation equation in Student MDP
-
-  
-
 ![image.png](images/image%2026.png)
 
   
@@ -1034,9 +874,6 @@ The point is not a state: you are teleported instantly to one of the three state
   
 
 The value function is computed by considering:
-
-  
-
 - both probabilities of the two next states we can end up ( Study or Pub ) , we are assuming 50% 50%.
 
 - If we study, we get a 10 reward ( 0.5 * 10 )
@@ -1048,21 +885,12 @@ The value function is computed by considering:
   
 
 Bellman expectation equation can be expressed using the induced MRP:
-
-  
-
 $$
 
 v_\pi = R^\pi + \gamma P^\pi v_\pi
 
 $$
-
-  
-
 Value function can be computed directly as we have seen before
-
-  
-
 $$
 
 v_\pi = (I-\gamma P^\pi)^{-1} R^\pi
@@ -1133,8 +961,6 @@ $$
 
 $$
 
-  
-
 One policy is better than another policy if the value function for that policy is greater than the value function of the other one in all the states. It means that if for one state, the value function is worse than the other , the policy is not greater or equal.
 
   
@@ -1144,9 +970,6 @@ One policy is better than another policy if the value function for that policy i
   
 
 We can find the optimal policy by maximizing over $q_\star(s,a)$
-
-  
-
 ![image.png](images/image%2030.png)
 
   
@@ -1274,26 +1097,17 @@ Bellman optimality equation is non linear ( the max operation is fundamentally n
   
 
 # Planning by Dynamic Programming
-
-  
-
 Dynamic programming is a method for solving complex problems by breaking them down into subproblems: we solve subproblems and then we combine their solutions.
 
   
 
 Dynamic programming is a general solution method for problems which have two properties:
-
-  
-
 - Optimal substructure → optimal solution can be decomposed into subproblems
-
 - Overlapping subproblems → solutions can be cached and reused because subproblems recur many time
 
   
 
 MDPs satisfy both properties:
-
-  
 
 1. Bellman equation are recursive
 
@@ -1306,31 +1120,16 @@ Dynamic Programming assumes full knowledge of the MDP therefore it is used for *
   
 
 We can solve two special cases of planning an MDP
-
-  
-
 1. Prediction problem, given as input an MDP $<S, A, P, R, \gamma >$ and a policy $\pi$ , the output will be the value function $v_\pi$
-
 2. Control problem, given as input an MDP $< S, A, P, R ,\gamma >$ we get as output both optimal value function $v_\star$ and optimal policy $\pi_\star$
 
   
 
 ## Policy Evaluation
-
-  
-
 We want to evaluate a given policy $\pi$ by an iterative application of Bellman expectation backup.
-
-  
-
 We will start with an arbitrary initial value function $v_1$ ( it can be seen as a vector of all 0 ) , we apply one iteration of the bellman expectation to get $v_2$ and so on for many times and at then we end up with the true value function $v_\pi$ ( the convergence will be discussed later ).
 
-  
-
 We will do it by using synchronous backups:
-
-  
-
 - At each iteration k+1
 
 - We consider all the states $s \in S$
@@ -1339,16 +1138,8 @@ We will do it by using synchronous backups:
 
 - Update the value function $v_{k+1}(s)$ from $v_k(s')$ where s’ is the successor state of s
 
-  
-
 The value function of the next iteration can be defined as:
-
-  
-
 ![image.png](images/image%2037.png)
-
-  
-
 $$
 
 v_{k+1}(s) = \sum_{a \in A} \pi(a|s) \left( R_s^a + \gamma \sum_{s' \in S} P_{ss'}^a v_k(s') \right)
@@ -4102,7 +3893,7 @@ $$
 $$
 It tells us how much better than usual a particular action a is and how to adjust our policy to achieve that action a.
 Instead of asking "how good is action a?" (Q-value), you ask "how good is action a compared to the average?" (advantage). This centers the signal and makes learning much more stable and efficient.
-The state value function $V^\pi(s)$ is the perfect baseline because it literally represents what "usual" performance is in that state.
+The advantage function quantifies the marginal improvement of taking a particular action against any action ( The state value function $V^\pi(s)$ is the perfect baseline because it literally represents what "usual" performance is in that state ).
 ![[Screenshot 2026-01-28 alle 10.42.09.png]]
 ### Estimating the Advantage Function
 The advantage function can significantly reduce variance of policy gradient.
@@ -4804,7 +4595,7 @@ In order to avoid big updates to the policy weights , we should use the clipped 
 $$
 \begin{aligned}
 r_t(\theta) &=  \frac{\pi_\theta(a_t | s_t)}{\pi_{\theta_\text{old}}(a_t|s_t)}  \\
-J_\theta^\text{clipped} &= E_t[\min\left(J_\theta,\text{clip}( r_t (\theta) , 1+ \epsilon , 1-\epsilon )\right)]
+J_\theta^\text{clipped} &= E_t[\min\left(J_\theta,\text{clip}( r_t (\theta) , 1+ \epsilon , 1-\epsilon )\right)\hat{A_t}]
 \end{aligned}
 $$
 If the update wants to change the policy by more than (for example) 20%, PPO "clips" the gradient. The agent stops getting "credit" for moving further away, which removes the incentive to make massive, risky changes to the weights.
