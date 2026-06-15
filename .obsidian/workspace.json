@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "XAI/Guide to Explainable AI.md",
-                "mode": "source",
-                "source": false
+                "file": "README.md",
+                "mode": "preview",
+                "source": true
               },
               "icon": "lucide-file",
-              "title": "Guide to Explainable AI"
+              "title": "README"
             }
           }
         ]
@@ -185,6 +185,11 @@
   },
   "active": "b5350a8449829593",
   "lastOpenFiles": [
+    "Blockchain/Smart Contract.md",
+    "README.md",
+    "Blockchain/Blockchain and Bitcoin.md",
+    "XAI/Guide to Explainable AI.md",
+    "Swedish",
     "Reinforcement Learning/Reinforcement Learning Basic Course.md",
     "Blockchain/imgs/Screenshot 2026-04-24 alle 15.48.37.png",
     "Blockchain/imgs/Screenshot 2026-04-24 alle 15.43.32.png",
@@ -198,11 +203,8 @@
     "Blockchain/imgs/Screenshot 2026-05-10 alle 18.22.36.png",
     "Reinforcement Learning/Papers on Deep Reinforcement Learning.md",
     "Reinforcement Learning/RISE Model Explanation.md",
-    "Blockchain/Smart Contract.md",
     "Reinforcement Learning/RISE for Clients.md",
-    "Blockchain/Blockchain and Bitcoin.md",
     "Blockchain/Blockchain and Bitcoin 1.md",
-    "XAI/Guide to Explainable AI.md",
     "Data Structures/Data Structure.md",
     "Data Structures/Behavioural Interviews.md",
     "Blockchain/imgs",
@@ -215,8 +217,6 @@
     "Data Structures",
     "XAI/images",
     "XAI/cartella senza nome",
-    "XAI/Algorithms/CounterfactualsForRL.py",
-    "XAI/Algorithms/TimeSHAP.py",
-    "README.md"
+    "XAI/Algorithms/CounterfactualsForRL.py"
   ]
 }
