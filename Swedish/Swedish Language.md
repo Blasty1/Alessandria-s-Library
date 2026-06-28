@@ -1,0 +1,34 @@
+There are 29 letters: 20 consonants and 9 vowels.
+Swedish alphabet is:
+- **a**: ah
+- b: bea
+- c: cea
+- d: di
+- **e**: ia
+- f: eff
+- g: ghia
+- h: ua
+- **i**: ijj
+- j: gii
+- k: qua
+- l: ell
+- m: emm
+- n: en
+- **o**: oo
+- p: pii
+- q: qui
+- r: err
+- s: ess
+- t: tia
+- u: uu
+- v: viii
+- w: double vii
+- x: ixx
+- **y**: iiii
+- z: zetta
+- **å**: o
+	- åska means thunder
+- **ä**: eee( bocca aperta )
+	- ägg means egg
+	- äpple means apple
+- **ö**: oa ( bocca ad o e pronunci e )

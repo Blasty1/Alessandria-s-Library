@@ -9,3 +9,4 @@ The notes from all the courses I have taken for my career and beyond.
 | **Explainable AI**         | Interpretability of Traditional ML models, Interpretability of Deep Learning Models, XAI Techniques, LIME, SHAP, Integrated Gradients, Saliency Maps, SmoothGrad, PDPs, ICE Plots, ALE Plots, TimeSHAP, DTW Explainer, Counterfactual explanations and Interpretable Modeling of Deep Reinforcement Learning Driven Scheduling | A Comprehensive Guide to Explainable AI: From Classical Models to LLMs book of arXiv:2412.00800v           |
 | **Blockhain**              | What is a blockchain, how it can be used for economy, token, cryptocurrency, smart contract, how to write a smart contract with Solidity | Course on Udemy called Blockchain A-Z: Build a Blockchain, Crypto, & Smart Contract |
 | **Swedish Course**         | | | 
+| **LLMs**                   | | Videos of Andrej Karpathy ( Deep Dive Into LLMs like ChatGPT ) |
